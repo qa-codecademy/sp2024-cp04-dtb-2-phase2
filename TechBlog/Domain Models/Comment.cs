@@ -9,6 +9,7 @@
             Text = text;
             Date = DateTime.UtcNow;
         }
+        public int PostId { get; set; }
         public string Name { get; set; }
         public string Text { get; set; }
         public DateTime Date { get; set; }

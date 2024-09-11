@@ -8,9 +8,9 @@ namespace Domain_Models
         public string Text {  get; set; }
         public List<Tag> Tags { get; set; }
         public int UserId { get; set; }
-        public List<int> Stars { get; set; }
-        public List<int> Comments { get; set; }
+        public User User { get; set; }
+        public List<Star> Stars { get; set; }
+        public List<Comment> Comments { get; set; }
         public DateTime PostingTime { get; set; }
-
     }
 }
