@@ -20,5 +20,15 @@ namespace Mappers
                 Password = hash
             };
         }
-    }
+        public static LoginResponseDto ToModel(this User user, string token)
+        {
+            return new LoginResponseDto
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Token = token
+            };
+        }
+    } 
 }

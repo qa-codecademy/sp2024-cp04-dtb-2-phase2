@@ -2,6 +2,7 @@
 {
     public enum Tag
     {
+
         Technology = 1,
         Data,
         Cybersecurity,

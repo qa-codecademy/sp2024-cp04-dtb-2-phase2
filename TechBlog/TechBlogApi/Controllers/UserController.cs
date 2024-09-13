@@ -41,11 +41,11 @@ namespace TechBlogApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public ActionResult<string> Login([FromBody] LoginUserDto loginUserDto)
+        public ActionResult<LoginResponseDto> Login([FromBody] LoginUserDto loginUserDto)
         {
             try
             {
-                string token = _userService.Login(loginUserDto);
+                var token = _userService.Login(loginUserDto);
                 return Ok(token);
             }
             catch (Exception ex)

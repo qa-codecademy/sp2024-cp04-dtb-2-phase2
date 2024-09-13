@@ -76,7 +76,7 @@ namespace Services.Implementation
 
 
 
-        public string Login(LoginUserDto loginUserDto)
+        public LoginResponseDto Login(LoginUserDto loginUserDto)
         {
             if (loginUserDto == null)
             {
@@ -91,14 +91,14 @@ namespace Services.Implementation
             string hash = GenerateHash(loginUserDto.Password);
 
             User userDb = _userRepository.GetUserByEmailAndPassword(loginUserDto.Email, hash);
-            if (userDb != null)
+            if (userDb == null)
             {
                 throw new Exception($"Invalid login for the user with email: {loginUserDto.Email}");
             }
 
             JwtSecurityTokenHandler jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
 
-            byte[] secretKeyBytes = Encoding.ASCII.GetBytes("SecretKey");
+            byte[] secretKeyBytes = Encoding.ASCII.GetBytes("Our very secret secretttt secret key");
 
             SecurityTokenDescriptor securityTokenDescriptor = new SecurityTokenDescriptor
             {
@@ -120,7 +120,7 @@ namespace Services.Implementation
 
             string resultToken = jwtSecurityTokenHandler.WriteToken(token);
 
-            return resultToken;
+            return userDb.ToModel(resultToken);
         }
 
 
