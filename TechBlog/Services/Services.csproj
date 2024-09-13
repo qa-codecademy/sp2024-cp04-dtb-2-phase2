@@ -10,6 +10,8 @@
     <ProjectReference Include="..\Data Access\Data Access.csproj" />
     <ProjectReference Include="..\Domain Models\Domain Models.csproj" />
     <ProjectReference Include="..\DTOs\DTOs.csproj" />
+    <ProjectReference Include="..\Mappers\Mappers.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>

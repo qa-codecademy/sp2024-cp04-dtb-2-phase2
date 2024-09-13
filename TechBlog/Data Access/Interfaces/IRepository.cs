@@ -4,12 +4,14 @@ namespace Data_Access.Interfaces
 {
     public interface IRepository<T> where T : Base
     {
-        ICollection<T> GetAll();
+        // methods were set to expect to return bool, were changed to expect nothing 
+        // GetAll was changed from ICollection to List
+        List<T> GetAll();
         T GetById(int id);
-        bool Add(T entity);
+        void Add(T entity);
         bool Any(int id);
-        bool Update(T entity);
-        bool Delete(T entity);
-        bool DeleteById(int id);
+        void Update(T entity);
+        void Delete(T entity);
+        void DeleteById(int id);
     }
 }
