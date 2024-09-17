@@ -1,4 +1,5 @@
 ﻿using Data_Access.Interfaces;
+using Domain_Models;
 using Mappers;
 using Services.Interfaces;
 
@@ -43,6 +44,23 @@ namespace Services.Implementation
                 var star = StarMapper.ToDomainModel(userId,postId, rating);
                 _repository.Update(star);
             }
+        }
+        // OVA BI TREBALO VO POST SERVISOT DA ODI
+        public double GetAvgRatingForPost(Post post)
+        {
+            var result =  _repository.GetAllStarsForPost(post.Id);
+            if (result.Count > 0)
+                throw new Exception("There are no stars for this post!");
+
+            int rating = 0;
+            foreach(var item in result)
+            {
+                rating += item.Rating;
+            }
+            return rating/result.Count;
+
+
+
         }
 
     }

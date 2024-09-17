@@ -18,12 +18,14 @@ namespace Helpers
         public static void InjectServices(IServiceCollection services)
         {
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IStarService, StarService>();
 
         }
 
         public static void InjectRepositories(IServiceCollection services)
         {
             services.AddTransient<IUserReposiotry, UserRepository>();
+            services.AddTransient<IStarRepository, StarRepository>();
         }
     }
 }
