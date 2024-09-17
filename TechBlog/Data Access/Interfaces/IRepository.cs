@@ -11,7 +11,8 @@ namespace Data_Access.Interfaces
         bool Add(T entity);
         bool Any(int id);
         bool Update(T entity);
-        bool Delete(T entity);
+
+        //bool Delete(T entity);
         bool DeleteById(int id);
     }
 }

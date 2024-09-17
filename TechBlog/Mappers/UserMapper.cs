@@ -30,5 +30,15 @@ namespace Mappers
                 Token = token
             };
         }
+        public static UserDto ToModel(this User model)
+        {
+            var dto = new UserDto();
+            if(model != null)
+            {
+                dto.Fullname = model.FullName;
+                dto.Id = model.Id;
+            }
+            return dto;
+        }
     } 
 }
