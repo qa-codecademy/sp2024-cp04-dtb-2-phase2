@@ -55,5 +55,15 @@ namespace TechBlogApi.Controllers
             }
 
         }
+
+        [AllowAnonymous]
+        [HttpGet] 
+        public ActionResult<UserDto> GetAll()
+        {
+            try
+            {
+                return _userService.GetAll();
+            }
+        }
     }
 }

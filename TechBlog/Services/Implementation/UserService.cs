@@ -110,6 +110,7 @@ namespace Services.Implementation
                 Subject = new System.Security.Claims.ClaimsIdentity(
                     new[]
                     {
+                        new Claim("UserId", userDb.Id.ToString()),
                         new Claim ("userFullName", userDb.FirstName + ' ' + userDb.LastName),
                         new Claim(ClaimTypes.NameIdentifier, userDb.Email),
                         new Claim("userRole", "")
