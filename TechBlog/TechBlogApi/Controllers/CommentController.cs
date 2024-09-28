@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using System.Data;
-using System.Linq.Expressions;
 using System.Security.Claims;
 
 namespace TechBlogApi.Controllers
@@ -35,27 +34,6 @@ namespace TechBlogApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-        [HttpGet("byid")]
-        public ActionResult <CommentDto> Get(int id)
-        {
-            try
-            {
-                if (id == null)
-                {
-                    return BadRequest($"A post with the ID: {id} does not exist");
-                }
-                
-                return _commentService.GetById(id);
-            }
-            catch (DataException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
         
         [HttpPost]
         public ActionResult Add([FromBody] AddCommentDto addCommentDto)
@@ -76,34 +54,29 @@ namespace TechBlogApi.Controllers
         }
 
         [Authorize]
-        [HttpPut]
-        public IActionResult Update([FromBody] UpdateCommentDto updateCommentDto)
-        {
-            try
-            {
-                var identity = HttpContext.User.Identity as ClaimsIdentity;
-                var userIdClaim = identity.FindFirst("UserId")?.Value;
-                if (userIdClaim == null || !int.TryParse(userIdClaim, out int loggedInUserId))
-                {
-                    return StatusCode(StatusCodes.Status401Unauthorized, "User ID is missing or invalid.");
-
-                }
-                if (loggedInUserId != updateCommentDto.UserId)
-                {
-                    return StatusCode(StatusCodes.Status403Forbidden);
-                }
-                _commentService.Update(updateCommentDto);
-                return NoContent();
-            }
-            catch (DataException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
+        //[HttpPut]
+        //public IActionResult Update([FromBody] UpdateCommentDto updateCommentDto)
+        //{
+        //    try
+        //    {
+        //        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        //        var userIdClaim = identity.FindFirst("UserId")?.Value;
+        //        if (identity.FindFirst("UserId" != updateCommentDto.UserId))
+        //        {
+        //            return StatusCode(StatusCodes.Status403Forbidden);
+        //        }
+        //        _commentService.Update(updateCommentDto);
+        //        return NoContent();
+        //    }
+        //    catch (DataException ex)
+        //    { 
+        //        return BadRequest(ex.Message);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        //    }
+        //}
         [HttpDelete]
         public ActionResult Delete(int id, DeleteCommentDto deleteCommentDto)
         {
@@ -117,13 +90,13 @@ namespace TechBlogApi.Controllers
                     return StatusCode(StatusCodes.Status401Unauthorized, "User ID is missing or invalid.");
                 }
 
-                if (loggedInUserId != deleteCommentDto.UserId || identity.FindFirst("userRole").Value != "Admin")
+                if (identity.FindFirst("UserId").Value != deleteCommentDto.UserId || identity.FindFirst("userRole").Value != "Admin")
                 {
                     return StatusCode(StatusCodes.Status403Forbidden);
                 }
-                _commentService.Delete(id);
+                _commentService.Delete(deleteCommentDto);
                 return Ok("The comment is deleted");
-            } 
+            }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
