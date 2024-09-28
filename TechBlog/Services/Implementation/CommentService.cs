@@ -21,24 +21,24 @@ namespace Services.Implementation
         {
             _commentRepository = commentRepository;
         }
-        
+
         public void Add(AddCommentDto addCommentDto)
         {
-            if(addCommentDto  == null)
+            if (addCommentDto == null)
             {
                 throw new DataException("User cannot be null");
             }
-                
+
             var comment = CommentMapper.ToComment(addCommentDto);
-            
+
             _commentRepository.Add(comment);
-            
+
         }
 
         public void Delete(int id)
         {
             Comment commentDb = _commentRepository.GetById(id);
-            if(commentDb == null)
+            if (commentDb == null)
             {
                 throw new NotFoundException("Comment not found");
             }
@@ -47,7 +47,7 @@ namespace Services.Implementation
 
         public ICollection<CommentDto> GetAll()
         {
-            return _commentRepository.GetAll().Select(x=>x.ToCommentDto()).ToList();
+            return _commentRepository.GetAll().Select(x => x.ToCommentDto()).ToList();
         }
         public CommentDto GetById(int id)
         {
@@ -62,7 +62,7 @@ namespace Services.Implementation
 
         public void Update(UpdateCommentDto updateCommentDto)
         {
-            if(updateCommentDto == null)
+            if (updateCommentDto == null)
             {
                 throw new NotFoundException("Comment not found");
             }
@@ -71,13 +71,13 @@ namespace Services.Implementation
             {
                 throw new NotFoundException($"Comment with id:{updateCommentDto.Id} is not found");
             }
-            if(string.IsNullOrEmpty(updateCommentDto.Text))
+            if (string.IsNullOrEmpty(updateCommentDto.Text))
             {
                 throw new DataException($"Text can not be empty");
             }
-            
+
             commentDb.Text = updateCommentDto.Text;
-            
+
             _commentRepository.Update(commentDb);
         }
     }

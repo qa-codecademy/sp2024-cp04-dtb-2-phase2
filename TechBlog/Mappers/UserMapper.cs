@@ -33,12 +33,12 @@ namespace Mappers
         public static UserDto ToModel(this User model)
         {
             var dto = new UserDto();
-            if(model != null)
+            if (model != null)
             {
                 dto.Fullname = model.FullName;
                 dto.Id = model.Id;
             }
             return dto;
         }
-    } 
+    }
 }

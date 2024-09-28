@@ -21,7 +21,7 @@ namespace Services.Implementation
     public class UserService : IUserService
     {
         private readonly IUserReposiotry _userRepository;
-        
+
         public UserService(IUserReposiotry userReposiotry)
         {
             this._userRepository = userReposiotry;
@@ -33,7 +33,7 @@ namespace Services.Implementation
             {
                 throw new DataException("User cannot be null");
             }
-            
+
             if (!string.IsNullOrEmpty(registerUserDto.FirstName))
             {
                 ValidationHelper.ValidateStringColumnLength(registerUserDto.FirstName, "Firstname", 50);
