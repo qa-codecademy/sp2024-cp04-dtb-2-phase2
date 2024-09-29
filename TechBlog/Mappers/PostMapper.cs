@@ -1,6 +1,5 @@
 ﻿using Domain_Models;
 using DTOs.Post;
-using DTOs.User;
 
 namespace Mappers
 {
@@ -28,7 +27,7 @@ namespace Mappers
             {
                 dto.Title = model.Title;
                 dto.Text = model.Text;
-                dto.User = model.User.ToModel();
+                //dto.User = model.User.ToModel();
                 //dto.Rating = model.Stars.Sum(x => x.Rating) / model.Stars.Count;
                 dto.Comments = model.Comments;
                 dto.PostingTime = model.PostingTime;

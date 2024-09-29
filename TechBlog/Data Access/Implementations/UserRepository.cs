@@ -12,12 +12,12 @@ namespace Data_Access.Implementations
             _dbContext = dbContext;
         }
 
-        public User GetUserByEmail(string email)
+        public User? GetUserByEmail(string email)
         { 
             return _dbContext.Users.FirstOrDefault(x => x.Email == email);
         }
 
-        public User GetUserByEmailAndPassword(string email, string password)
+        public User? GetUserByEmailAndPassword(string email, string password)
         {
             return _dbContext.Users.FirstOrDefault(x=> x.Email.ToLower() == email.ToLower() && x.Password == password);
         }

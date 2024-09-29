@@ -31,7 +31,7 @@ namespace Services.Implementation
             else
             {
                 var star = StarMapper.ToDomainModel(userId, postId, 1);
-                _repository.Delete(star);
+                //_repository.DeleteById(star); Tuka treba Id na svezdata taka?
             }
         }
 
@@ -46,6 +46,8 @@ namespace Services.Implementation
             }
         }
         // OVA BI TREBALO VO POST SERVISOT DA ODI
+
+        // Ke odi vo mapperot sega ( :
         public double GetAvgRatingForPost(Post post)
         {
             var result =  _repository.GetAllStarsForPost(post.Id);

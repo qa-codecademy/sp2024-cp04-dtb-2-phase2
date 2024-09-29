@@ -1,15 +1,9 @@
-﻿using Data_Access.Implementations;
-using Data_Access.Interfaces;
+﻿using Data_Access.Interfaces;
 using Domain_Models;
-using DTOs.Comment;
+using DTOs.CommentDto;
 using Mappers;
 using Services.Interfaces;
 using Shared.CustomExceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.Implementation
 {

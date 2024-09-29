@@ -1,22 +1,16 @@
-﻿using Data_Access.Implementations;
-using Data_Access.Interfaces;
+﻿using Data_Access.Interfaces;
 using Domain_Models;
-using DTOs.Comment;
 using DTOs.User;
 using Mappers;
 using Microsoft.IdentityModel.Tokens;
 using Services.Interfaces;
 using Shared;
 using Shared.CustomExceptions;
-using System;
-using System.Collections.Generic;
 //using System.Data;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.Implementation
 {
@@ -92,7 +86,7 @@ namespace Services.Implementation
 
             string hash = GenerateHash(loginUserDto.Password);
 
-            User userDb = _userRepository.GetUserByEmailAndPassword(loginUserDto.Email, hash);
+            User? userDb = _userRepository.GetUserByEmailAndPassword(loginUserDto.Email, hash);
             if (userDb == null)
             {
                 throw new Exception($"Invalid login for the user with email: {loginUserDto.Email}");
@@ -127,22 +121,20 @@ namespace Services.Implementation
         }
 
 
-        private static string GenerateHash(string password)
+        private string GenerateHash(string password)
         {
-            MD5CryptoServiceProvider mD5CryptoServiceProvider = new MD5CryptoServiceProvider();
+            MD5 md5CryptoService = MD5.Create();
 
             byte[] passwordBytes = Encoding.ASCII.GetBytes(password);
 
-            byte[] hashedBytes = mD5CryptoServiceProvider.ComputeHash(passwordBytes);
+            byte[] hashBytes = md5CryptoService.ComputeHash(passwordBytes);
 
-            string hash = Encoding.ASCII.GetString(hashedBytes);
-
-            return hash;
+            return Encoding.ASCII.GetString(hashBytes);
         }
 
         public UserDto GetUserById(int id)
         {
-            User user = _userRepository.GetById(id);
+            User? user = _userRepository.GetById(id);
             if (user == null)
             {
                 throw new NotFoundException($"User with {id} not found");
@@ -158,7 +150,7 @@ namespace Services.Implementation
 
         public void DeleteUser(int id)
         {
-            User userDb = _userRepository.GetById(id);
+            User? userDb = _userRepository.GetById(id);
             if (userDb == null)
             {
                 throw new NotFoundException("Comment not found");
