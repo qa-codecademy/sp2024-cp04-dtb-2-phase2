@@ -1,14 +1,16 @@
 ﻿using Data_Access.Implementations;
 using Data_Access.Interfaces;
 using Domain_Models;
+using DTOs.Comment;
 using DTOs.User;
 using Mappers;
 using Microsoft.IdentityModel.Tokens;
 using Services.Interfaces;
 using Shared;
+using Shared.CustomExceptions;
 using System;
 using System.Collections.Generic;
-using System.Data;
+//using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -121,7 +123,7 @@ namespace Services.Implementation
 
             string resultToken = jwtSecurityTokenHandler.WriteToken(token);
 
-            return userDb.ToModel(resultToken);
+            return userDb.ToLoginUserDto(resultToken);
         }
 
 
@@ -138,5 +140,30 @@ namespace Services.Implementation
             return hash;
         }
 
+        public UserDto GetUserById(int id)
+        {
+            User user = _userRepository.GetById(id);
+            if (user == null)
+            {
+                throw new NotFoundException($"User with {id} not found");
+            }
+            UserDto userDto = user.ToUserDto();
+            return userDto;
+        }
+
+        public ICollection<UserDto> GetAllUsers()
+        {
+            return _userRepository.GetAll().Select(x => x.ToUserDto()).ToList(); ;
+        }
+
+        public void DeleteUser(int id)
+        {
+            User userDb = _userRepository.GetById(id);
+            if (userDb == null)
+            {
+                throw new NotFoundException("Comment not found");
+            }
+            _userRepository.DeleteById(id);
+        }
     }
 }

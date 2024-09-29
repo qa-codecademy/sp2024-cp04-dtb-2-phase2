@@ -20,7 +20,7 @@ namespace Mappers
                 Password = hash
             };
         }
-        public static LoginResponseDto ToModel(this User user, string token)
+        public static LoginResponseDto ToLoginUserDto(this User user, string token)
         {
             return new LoginResponseDto
             {
@@ -30,7 +30,7 @@ namespace Mappers
                 Token = token
             };
         }
-        public static UserDto ToModel(this User model)
+        public static UserDto ToUserDto(this User model)
         {
             var dto = new UserDto();
             if (model != null)

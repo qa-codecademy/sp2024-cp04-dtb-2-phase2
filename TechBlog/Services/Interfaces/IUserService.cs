@@ -11,8 +11,8 @@ namespace Services.Interfaces
     {
         void RegisterUser(RegisterUserDto registerUserDto);
         LoginResponseDto Login(LoginUserDto loginUserDto);
-        void GetUserById(int id);
-        void GetAllUsers();
+        public UserDto GetUserById(int id);
+        public ICollection<UserDto> GetAllUsers();
         void DeleteUser(int id);
     }
 }

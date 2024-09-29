@@ -62,7 +62,11 @@ namespace TechBlogApi.Controllers
         {
             try
             {
-                return _userService.GetAll();
+                return _userService.GetAllUsers();
+            } 
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
     }
