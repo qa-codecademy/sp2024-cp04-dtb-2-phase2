@@ -2,6 +2,8 @@
 using Domain_Models;
 using DTOs.User;
 using Mappers;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Services.Interfaces;
 using Shared;
@@ -17,25 +19,28 @@ namespace Services.Implementation
     public class UserService : IUserService
     {
         private readonly IUserReposiotry _userRepository;
+        private readonly IConfiguration _config;
 
-        public UserService(IUserReposiotry userReposiotry)
+        public UserService(IUserReposiotry userReposiotry, IConfiguration config)
         {
             this._userRepository = userReposiotry;
-        }
+            _config = config;
 
-        public void RegisterUser(RegisterUserDto registerUserDto)
+    }
+
+    public void RegisterUser(RegisterUserDto registerUserDto)
         {
             if (registerUserDto == null)
             {
                 throw new DataException("User cannot be null");
             }
 
-            if (!string.IsNullOrEmpty(registerUserDto.FirstName))
+            if (string.IsNullOrEmpty(registerUserDto.FirstName))
             {
                 ValidationHelper.ValidateStringColumnLength(registerUserDto.FirstName, "Firstname", 50);
             }
 
-            if (registerUserDto.LastName != null)
+            if (registerUserDto.LastName == null)
             {
                 ValidationHelper.ValidateStringColumnLength(registerUserDto.LastName, "Lastname", 50);
             }
@@ -56,7 +61,7 @@ namespace Services.Implementation
             }
 
             User userDb = _userRepository.GetUserByEmail(registerUserDto.Email);
-            if (userDb != null)
+            if (userDb == null)
             {
                 //this means that we have a user with registerUserDto.Username in the db
                 throw new DataException($"Username {registerUserDto.Email} is already in use");
@@ -94,7 +99,7 @@ namespace Services.Implementation
 
             JwtSecurityTokenHandler jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
 
-            byte[] secretKeyBytes = Encoding.ASCII.GetBytes("Our very secret secretttt secret key");
+            byte[] secretKeyBytes = Encoding.ASCII.GetBytes(_config["Token"]);
 
             SecurityTokenDescriptor securityTokenDescriptor = new SecurityTokenDescriptor
             {

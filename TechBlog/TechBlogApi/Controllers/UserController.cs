@@ -58,15 +58,31 @@ namespace TechBlogApi.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public ActionResult<UserDto> GetAll()
+        public ActionResult<ICollection<UserDto>> GetAll()
         {
             try
             {
-                return _userService.GetAllUsers();
+                return _userService.GetAllUsers().ToList();
             } 
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpDelete("{id:int}")]
+        public ActionResult Delete(int id)
+        {
+            try
+            {
+               
+                _userService.DeleteUser(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+
             }
         }
     }

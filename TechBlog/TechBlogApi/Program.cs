@@ -2,6 +2,7 @@ using Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
 namespace TechBlogApi
@@ -15,77 +16,70 @@ namespace TechBlogApi
             // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(
-
-                c =>
-                {
-                    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                    {
-                        Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
-                          Enter 'Bearer' [space] and then your token in the text input below.
-                          \r\n\r\nExample: 'Bearer 12345abcdef'",
-                        Name = "Authorization",
-                        In = ParameterLocation.Header,
-                        Type = SecuritySchemeType.ApiKey,
-                        Scheme = "Bearer"
-                    });
-
-                    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-                      {
-                        {
-                          new OpenApiSecurityScheme
-                          {
-                            Reference = new OpenApiReference
-                              {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                              },
-                              Scheme = "oauth2",
-                              Name = "Bearer",
-                              In = ParameterLocation.Header,
-
-                            },
-                            new List<string>()
-                          }
-                        });
-                }
-                
-                );
-
-            DependencyInjectionHelper.InjectServices(builder.Services);
-            DependencyInjectionHelper.InjectRepositories(builder.Services);
-
             var appSettings = builder.Configuration.GetSection("DbSettings");
             builder.Services.Configure<DatabaseSettings>(appSettings);
             DatabaseSettings dbSettings = appSettings.Get<DatabaseSettings>();
             var connectionString = dbSettings.ConnectionString;
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme // using microsoft.openapi.models
+                {
+                    Description = "Standard Authorisation header using the bearer scheme, e.g." +
+                    "\bearer {token} \"",
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+                c.OperationFilter<SecurityRequirementsOperationFilter>(); // install swashbucke.aspnetcore.filters
+
+            });
+            builder.Services.AddAuthentication(option =>
+            {
+                option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; // using Microsoft.AspNetCore.Authentication.JwtBearer;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters // using Microsoft.IdentityModel.Tokens;
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Token").Value)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+
+            DependencyInjectionHelper.InjectServices(builder.Services);
+            DependencyInjectionHelper.InjectRepositories(builder.Services);
+
+            
 
             DependencyInjectionHelper.InjectDbContext(builder.Services, connectionString);
 
-            builder.Services.AddAuthentication(x =>
-            {
-                //we will use JWT authentication
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x =>
-            {
-                //token configuration
+            //builder.Services.AddAuthentication(x =>
+            //{
+            //    //we will use JWT authentication
+            //    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //}).AddJwtBearer(x =>
+            //{
+            //    //token configuration
 
-                x.RequireHttpsMetadata = false;
-                //we expect the token into the HttpContext
-                x.SaveToken = true;
-                //how to validate token
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateAudience = false,
-                    ValidateIssuer = false,
-                    ValidateIssuerSigningKey = true,
-                    //the secret key
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("Our very secret secretttt secret key"))
-                };
-            });
+            //    x.RequireHttpsMetadata = false;
+            //    //we expect the token into the HttpContext
+            //    x.SaveToken = true;
+            //    //how to validate token
+            //    x.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        ValidateAudience = false,
+            //        ValidateIssuer = false,
+            //        ValidateIssuerSigningKey = true,
+            //        //the secret key
+            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("Our very secret secretttt secret key"))
+            //    };
+            //});
 
             var app = builder.Build();
 
@@ -97,9 +91,9 @@ namespace TechBlogApi
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

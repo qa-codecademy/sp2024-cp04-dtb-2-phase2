@@ -1,9 +1,11 @@
 ﻿using Domain_Models;
-using DTOs.Comment;
+using DTOs.CommentDto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
+using Services.Interfaces;
+using System.Collections.Immutable;
 using System.Data;
 using System.Linq.Expressions;
 using System.Security.Claims;
@@ -22,7 +24,7 @@ namespace TechBlogApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<CommentDto>> GetAll()
+        public ActionResult<ICollection<CommentDto>> GetAll()
         {
             try
             {
