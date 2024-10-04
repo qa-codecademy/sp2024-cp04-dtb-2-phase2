@@ -54,9 +54,9 @@ namespace TechBlogApi
             DependencyInjectionHelper.InjectServices(builder.Services);
             DependencyInjectionHelper.InjectRepositories(builder.Services);
 
-            
 
-            DependencyInjectionHelper.InjectDbContext(builder.Services, connectionString);
+            // Daniel's connection string: connectionString !!! !!!!!!
+            DependencyInjectionHelper.InjectDbContext(builder.Services, builder.Configuration.GetConnectionString("DefaultConnection"));
 
             //builder.Services.AddAuthentication(x =>
             //{

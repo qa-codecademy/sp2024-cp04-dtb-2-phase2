@@ -13,9 +13,13 @@ namespace Data_Access
         public DbSet<Post> Posts { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Star> Stars { get; set; }
+        public DbSet<NewsLetter> NewsLetterUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<NewsLetter>()
+                .HasKey(x => x.Email);
+
             modelBuilder.Entity<Star>()
                 .HasOne(m => m.User)  
                 .WithMany(u => u.Stars)  

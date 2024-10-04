@@ -11,12 +11,32 @@ namespace Services.Implementation
     {
         private readonly IPostRepository _repository;
         private readonly IMapper _mapper;
-        public PostService(IPostRepository repo, IMapper mapper)
+        private readonly IEmailService _emailService;
+        private readonly IUserService _userService;
+        public PostService(IPostRepository repo, IMapper mapper, IEmailService emailService, IUserService userService)
         {
             _repository = repo;
             _mapper = mapper;
+            _emailService = emailService;
+            _userService = userService;
         }
-        public bool Add(PostCreateDto entity) => _repository.Add(_mapper.Map<Post>(entity));
+        public bool Add(PostCreateDto entity)
+        {
+            var post = _mapper.Map<Post>(entity);
+            if (_repository.Add(post))
+            {
+                var author = _userService.GetUserById(post.Id);
+
+                if (author == null) 
+                {
+                    return false;
+                }
+                _emailService.SendEmail(entity, author.Fullname);
+
+                return true;
+            }
+            return false;
+        }
 
         public bool Any(int id) => _repository.Any(id);
         public bool DeleteById(int id)
