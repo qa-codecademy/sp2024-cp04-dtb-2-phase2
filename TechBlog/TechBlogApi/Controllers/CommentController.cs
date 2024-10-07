@@ -119,7 +119,7 @@ namespace TechBlogApi.Controllers
                     return StatusCode(StatusCodes.Status401Unauthorized, "User ID is missing or invalid.");
                 }
 
-                if (loggedInUserId != deleteCommentDto.UserId || identity.FindFirst("userRole").Value != "Admin")
+                if (loggedInUserId != deleteCommentDto.UserId && identity.FindFirst("userRole").Value != "Admin")
                 {
                     return StatusCode(StatusCodes.Status403Forbidden);
                 }

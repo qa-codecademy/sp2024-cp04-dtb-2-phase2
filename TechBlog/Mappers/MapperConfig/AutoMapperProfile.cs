@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain_Models;
 using DTOs.CommentDto;
+using DTOs.Image;
 using DTOs.Post;
 using DTOs.User;
 namespace Mappers.MapperConfig
@@ -21,6 +22,10 @@ namespace Mappers.MapperConfig
 
             CreateMap<PostCreateDto, Post>()
                 .ForMember(x => x.Tags, y => y.MapFrom(z => z.Tags.GetPostTags()));
+
+            CreateMap<UploadImageDto, Image>().ReverseMap();
+            CreateMap<Image, ImageDto>().ReverseMap();
+                
         }
     }
 }

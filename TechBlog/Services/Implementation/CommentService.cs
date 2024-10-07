@@ -48,7 +48,7 @@ namespace Services.Implementation
             Comment comment = _commentRepository.GetById(id);
             if (comment == null)
             {
-                throw new NotFoundException($"User with {id} not found");
+                throw new NotFoundException($"Comment with id: {id} was not found");
             }
             CommentDto commentDto = comment.ToCommentDto();
             return commentDto;

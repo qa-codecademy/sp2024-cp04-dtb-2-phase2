@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics.Eventing.Reader;
 using DTOs.User;
 using Services.Interfaces;
+using System.Security.Claims;
 
 namespace TechBlogApi.Controllers
 {
@@ -75,7 +76,18 @@ namespace TechBlogApi.Controllers
         {
             try
             {
-               
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                var identityUserId = identity.FindFirst("UserId").Value;
+                
+                if (identityUserId == null || !int.TryParse(identityUserId, out int loggedInUserId))
+                {
+                    return StatusCode(StatusCodes.Status401Unauthorized, "User ID is missing or invalid.");
+                }
+                if (loggedInUserId != id && identity.FindFirst("userRole").Value != "Admin")
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden);
+                }
+
                 _userService.DeleteUser(id);
                 return Ok();
             }

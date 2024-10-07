@@ -1,6 +1,7 @@
 ﻿using Data_Access;
 using Data_Access.Implementations;
 using Data_Access.Interfaces;
+using Mappers.MapperConfig;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Services.Implementation;
@@ -19,6 +20,9 @@ namespace Helpers
         {
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IStarService, StarService>();
+            services.AddTransient<ICommentService, CommentService>();
+            services.AddTransient<IImageService, ImageService>();
+            services.AddAutoMapper(typeof(AutoMapperProfile));
 
         }
 
@@ -26,6 +30,8 @@ namespace Helpers
         {
             services.AddTransient<IUserReposiotry, UserRepository>();
             services.AddTransient<IStarRepository, StarRepository>();
+            services.AddTransient<ICommentRepository, CommentRepository>();
+            services.AddTransient<IImageRepository, ImageRepository>();
         }
     }
 }
