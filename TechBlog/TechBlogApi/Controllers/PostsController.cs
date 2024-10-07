@@ -29,7 +29,7 @@ namespace TechBlogApi.Controllers
             return Ok(_postService.GetById(id));
         }
         [HttpPost("create")]
-        public IActionResult Create(PostCreateDto dto) 
+        public IActionResult Create([FromForm] PostCreateDto dto) 
         {
             if (!_postService.Add(dto))
                 return BadRequest("The post wasn't created successfully!");

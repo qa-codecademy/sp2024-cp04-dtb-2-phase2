@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Data_Access.Implementations;
 using Data_Access.Interfaces;
 using Domain_Models;
+using DTOs.Image;
 using DTOs.Post;
 using Mappers.MapperConfig;
 using Services.Interfaces;
@@ -22,20 +24,29 @@ namespace Services.Implementation
         }
         public bool Add(PostCreateDto entity)
         {
-            var post = _mapper.Map<Post>(entity);
-            if (_repository.Add(post))
+            using (var memoryStream = new MemoryStream())
             {
-                var author = _userService.GetUserById(post.Id);
+                entity.ImageFile.CopyTo(memoryStream);
+                var imageBytes = memoryStream.ToArray();
+                string base64String = Convert.ToBase64String(imageBytes);
 
-                if (author == null) 
+                var post = _mapper.Map<Post>(entity);
+                post.Image = base64String;
+
+                if (_repository.Add(post))
                 {
-                    return false;
-                }
-                _emailService.SendEmail(entity, author.Fullname);
+                    var author = _userService.GetUserById(post.Id);
 
-                return true;
-            }
-            return false;
+                    if (author == null)
+                    {
+                        return false;
+                    }
+                    _emailService.SendEmail(entity, author.Fullname);
+
+                    return true;
+                }
+                return false;
+            }   
         }
 
         public bool Any(int id) => _repository.Any(id);
@@ -68,7 +79,7 @@ namespace Services.Implementation
                 found.Text = entity.Text;
                 found.Description = entity.Description;
                 found.UserId = entity.UserId;
-                found.Image = entity.Image;
+                //found.Image = entity.Image;
                 found.Tags = entity.Tags.GetPostTags();
 
                 return _repository.Update(found);

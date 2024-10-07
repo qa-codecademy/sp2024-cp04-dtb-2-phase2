@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace DTOs.Post
 {
@@ -13,7 +14,7 @@ namespace DTOs.Post
         [Required]
         public int UserId { get; set; }
         [Required]
-        public string Image { get; set; }
+        public IFormFile ImageFile { get; set; }
         [Required]
         public List<string> Tags { get; set; }
     }

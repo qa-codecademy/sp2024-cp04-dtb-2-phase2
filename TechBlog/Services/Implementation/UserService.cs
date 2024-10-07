@@ -61,7 +61,7 @@ namespace Services.Implementation
             }
 
             User userDb = _userRepository.GetUserByEmail(registerUserDto.Email);
-            if (userDb == null)
+            if (userDb != null)
             {
                 //this means that we have a user with registerUserDto.Username in the db
                 throw new DataException($"Username {registerUserDto.Email} is already in use");
