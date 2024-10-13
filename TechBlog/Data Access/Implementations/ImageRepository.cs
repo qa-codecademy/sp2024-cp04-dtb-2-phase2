@@ -16,9 +16,9 @@ namespace Data_Access.Implementations
             _imageContext = imageContext;
         }
 
-        public Image GetByPostId(int postId)
+        public Image GetById(int id)
         {
-            return _imageContext.Images.FirstOrDefault(x => x.PostId == postId);
+            return _imageContext.Images.FirstOrDefault(x => x.Id == id);
         }
     }
 }

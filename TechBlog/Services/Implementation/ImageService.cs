@@ -35,23 +35,23 @@ namespace Services.Implementation
 
                 var newImage = new Image
                 {
-                    PostId = uploadImageDto.PostId,
+                    //PostId = uploadImageDto.PostId,
                     Data = base64String,
-                    ContentType = uploadImageDto.ImageFile.ContentType,
-                    Name = uploadImageDto.ImageFile.Name
+                    //ContentType = uploadImageDto.ImageFile.ContentType,
+                    //Name = uploadImageDto.ImageFile.Name
 
                 };
                 _imageRepository.Add(newImage);
             }
         }
 
-        public ImageDto GetByPostId (int postId)
+        public ImageDto GetById (int id)
         {
-            Image image = _imageRepository.GetByPostId(postId);
+            Image image = _imageRepository.GetById(id);
 
             if(image == null)
             {
-                throw new NotFoundException($"The image for the post with id: {postId} was not found");
+                throw new NotFoundException($"The image for the post with id: {id} was not found");
             }
 
             ImageDto imageDto = _mapper.Map<ImageDto>(image);

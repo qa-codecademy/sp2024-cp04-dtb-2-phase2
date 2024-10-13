@@ -40,7 +40,7 @@ namespace Services.Implementation
                 string base64String = Convert.ToBase64String(imageBytes);
 
                 var post = _mapper.Map<Post>(entity);
-                post.Image = base64String;
+                post.ImageBase64 = base64String;
 
                 if (_repository.Add(post))
                 {

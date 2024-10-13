@@ -8,12 +8,12 @@ namespace Domain_Models
 {
     public class Image : Base 
     {
-        public int Id { get; set; }
-        public int PostId { get; set; }
+        
+        public int UserId { get; set; }
 
         public string Data { get; set; }
-        public string ContentType { get; set; }
-        public string Name { get; set; }
+        //public string ContentType { get; set; }
+        //public string Name { get; set; }
 
     }
 }

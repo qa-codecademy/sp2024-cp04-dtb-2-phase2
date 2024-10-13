@@ -9,6 +9,6 @@ namespace Data_Access.Interfaces
 {
     public interface IImageRepository : IRepository<Image>
     {
-        Image GetByPostId(int postId);
+        Image GetById(int id);
     }
 }

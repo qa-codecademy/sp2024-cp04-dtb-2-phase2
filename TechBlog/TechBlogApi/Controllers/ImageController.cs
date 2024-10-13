@@ -35,22 +35,22 @@ namespace TechBlogApi.Controllers
             }
         }
         [HttpGet]
-        public IActionResult GetByPostId(int postId)
+        public IActionResult GetByPostId(int id)
         {
             try
             {
-                if(postId == 0)
+                if(id == 0)
                 {
                     return BadRequest($"You need to enter the id value");
                 }
-                return Ok(_imageService.GetByPostId(postId));
+                return Ok(_imageService.GetById(id));
             } 
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
-
+        
 
     }
 }

@@ -14,7 +14,9 @@ namespace Domain_Models
         public List<Star> Stars { get; set; }
         public List<Comment> Comments { get; set; }
         public DateTime PostingTime { get; set; }
-        public string Image {  get; set; }
+        public string? ImageBase64 {  get; set; }
+        public int ? ImageId { get; set; }
+        public Image Image { get; set; }
         public string Tags { get; set; }
 
         //[NotMapped]
