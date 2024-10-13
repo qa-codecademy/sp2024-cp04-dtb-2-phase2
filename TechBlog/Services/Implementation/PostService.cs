@@ -1,9 +1,15 @@
 ﻿using AutoMapper;
+using Data_Access;
+using Data_Access.Implementations;
 using Data_Access.Interfaces;
 using Domain_Models;
+using DTOs.FilterDto;
+using DTOs.Image;
 using DTOs.Post;
 using Mappers.MapperConfig;
+using Microsoft.EntityFrameworkCore;
 using Services.Interfaces;
+using System.Collections.Generic;
 
 namespace Services.Implementation
 {
@@ -13,29 +19,43 @@ namespace Services.Implementation
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
         private readonly IUserService _userService;
-        public PostService(IPostRepository repo, IMapper mapper, IEmailService emailService, IUserService userService)
+        private readonly TechBlogDbContext _context;
+        private readonly DbSet<Post> _table;
+
+        public PostService(IPostRepository repo, IMapper mapper, IEmailService emailService, IUserService userService, TechBlogDbContext table)
         {
             _repository = repo;
             _mapper = mapper;
             _emailService = emailService;
             _userService = userService;
+            _context = table;
+            _table = _context.Set<Post>();
         }
         public bool Add(PostCreateDto entity)
         {
-            var post = _mapper.Map<Post>(entity);
-            if (_repository.Add(post))
+            using (var memoryStream = new MemoryStream())
             {
-                var author = _userService.GetUserById(post.Id);
+                entity.ImageFile.CopyTo(memoryStream);
+                var imageBytes = memoryStream.ToArray();
+                string base64String = Convert.ToBase64String(imageBytes);
 
-                if (author == null) 
+                var post = _mapper.Map<Post>(entity);
+                post.Image = base64String;
+
+                if (_repository.Add(post))
                 {
-                    return false;
-                }
-                _emailService.SendEmail(entity, author.Fullname);
+                    var author = _userService.GetUserById(post.UserId);
 
-                return true;
-            }
-            return false;
+                    if (author == null)
+                    {
+                        return false;
+                    }
+                    _emailService.SendEmail(entity, author.Fullname);
+
+                    return true;
+                }
+                return false;
+            }   
         }
 
         public bool Any(int id) => _repository.Any(id);
@@ -50,7 +70,55 @@ namespace Services.Implementation
         public ICollection<PostDto> GetAll() => _mapper.Map<ICollection<PostDto>>(_repository.GetAll().ToList());
 
         //  I wonder if this 1 liner will cause any issues 
-        public List<PostDto> GetPaginatedPosts(int pageIndex) => _mapper.Map<List<PostDto>>(_repository.GetPaginatedPosts(pageIndex));
+        public List<PostDto> GetPaginatedPosts(int pageIndex, PostFilter filters)
+        {
+            var query = _table.AsQueryable();
+
+            // Apply sorting
+            if (filters.SortBy == "old")
+            {
+                query = query.OrderBy(b => b.PostingTime);
+                return _mapper.Map < List < PostDto >> (_repository.GetPaginatedPosts(pageIndex, query));
+            }
+            else if (filters.SortBy == "new")
+            {
+                query = query.OrderByDescending(b => b.PostingTime);
+                return _mapper.Map<List<PostDto>>(_repository.GetPaginatedPosts(pageIndex, query));
+
+            }
+            else if (filters.SortBy == "popular")
+            {
+                query = query.OrderByDescending(b => b.Stars.Count); // Assuming popularity by star count
+                return _mapper.Map<List<PostDto>>(_repository.GetPaginatedPosts(pageIndex, query));
+
+            }
+
+            // Apply tag filter if provided
+            if (!string.IsNullOrEmpty(filters.Tags))
+            {
+                var tagsArray = filters.Tags.Split(',');
+                query = query.Where(p => tagsArray.All(tag => p.Tags.Contains(tag)));
+                return _mapper.Map<List<PostDto>>(_repository.GetPaginatedPosts(pageIndex, query));
+
+            }
+
+            // Filter by month and year if provided
+            if (filters.Year.HasValue)
+            {
+                query = query.Where(p => p.PostingTime.Year == filters.Year.Value);
+                return _mapper.Map<List<PostDto>>(_repository.GetPaginatedPosts(pageIndex, query));
+
+            }
+
+            if (filters.Month.HasValue)
+            {
+                query = query.Where(p => p.PostingTime.Month == filters.Month.Value);
+                return _mapper.Map<List<PostDto>>(_repository.GetPaginatedPosts(pageIndex, query));
+
+            }
+
+           return _mapper.Map<List<PostDto>>(_repository.GetPaginatedPosts(pageIndex, query));
+        }
         //{
         //    var posts = _repository.GetPaginatedPosts(pageIndex);
         //    var mappedPosts = _mapper.Map<List<PostDto>>(posts);
@@ -68,7 +136,7 @@ namespace Services.Implementation
                 found.Text = entity.Text;
                 found.Description = entity.Description;
                 found.UserId = entity.UserId;
-                found.Image = entity.Image;
+                //found.Image = entity.Image;
                 found.Tags = entity.Tags.GetPostTags();
 
                 return _repository.Update(found);

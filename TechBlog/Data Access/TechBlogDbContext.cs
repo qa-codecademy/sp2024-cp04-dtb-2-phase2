@@ -14,6 +14,7 @@ namespace Data_Access
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Star> Stars { get; set; }
         public DbSet<NewsLetter> NewsLetterUsers { get; set; }
+        public DbSet<Image> Images { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,6 +44,7 @@ namespace Data_Access
                .WithOne(u => u.User)
                .HasForeignKey(i => i.UserId)
                .OnDelete(DeleteBehavior.Cascade);
+
         }
 
     }

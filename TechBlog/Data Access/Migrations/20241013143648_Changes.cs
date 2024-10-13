@@ -5,7 +5,7 @@
 namespace Data_Access.Migrations
 {
     /// <inheritdoc />
-    public partial class AddedNewsLetterUsers : Migration
+    public partial class Changes : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -8,7 +8,7 @@
         public bool HasNextPage => PageIndex < TotalPages;
         public PaginatedList(List<Post> posts, int pageIndex, int totalPages)
         {
-            Posts = posts;
+            Posts = posts; 
             PageIndex = pageIndex;
             TotalPages = totalPages;
         }
