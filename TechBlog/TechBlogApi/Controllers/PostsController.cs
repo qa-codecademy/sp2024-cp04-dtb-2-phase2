@@ -1,4 +1,6 @@
-﻿using DTOs.Post;
+﻿using Domain_Models;
+using DTOs.FilterDto;
+using DTOs.Post;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
@@ -15,9 +17,9 @@ namespace TechBlogApi.Controllers
             _postService = service;
         }
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll(PaginatedList pagination, PostFilter filters)
         {
-            return Ok(_postService.GetAll());
+            return Ok(_postService.GetPaginatedPosts(pagination.PageIndex, filters));
         }
 
         [HttpGet("{id:int}")]

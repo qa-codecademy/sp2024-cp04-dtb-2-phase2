@@ -9,5 +9,6 @@ namespace Mappers.MapperConfig
             return stars.Sum(x => x.Rating) / stars.Count;
         }
         public static string GetPostTags(this List<string> tags) => string.Join(",", tags);
+        public static List<string> GetPostTagsBE(this string tags) => tags.Split(',').ToList();
     }
 }

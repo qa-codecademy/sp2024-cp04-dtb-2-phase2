@@ -12,6 +12,6 @@ namespace DTOs.Post
         public List<Comment> Comments { get; set; }
         public DateTime PostingTime { get; set; }
         public string Image { get; set; }
-        public string Tags { get; set; }
+        public List<string> Tags { get; set; }
     }
 }
