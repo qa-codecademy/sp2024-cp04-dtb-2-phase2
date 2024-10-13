@@ -5,6 +5,6 @@ namespace Data_Access.Interfaces
 {
     public interface INewsLetterRepository : IRepository<NewsLetter>
     {
-        public IEnumerable<NewsLetter> FilterEmailsByAuthorAndTags(string authors, List<string> tags);
+        public IEnumerable<NewsLetter> GetSubscribers(string authors, List<string> tags);
     }
 }

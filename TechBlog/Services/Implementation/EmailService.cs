@@ -1,17 +1,10 @@
-﻿using MimeKit;
-using System.Data;
-using MailKit.Net.Smtp;
-using System.Net.Mail;
-using Microsoft.Extensions.Configuration;
-using MailKit.Security;
-using MailKit.Security;
-using MimeKit;
-using MimeKit.Cryptography;
-using MailKit;
-using DTOs.Post;
-using Services.Interfaces;
-using Data_Access.Interfaces;
+﻿using Data_Access.Interfaces;
 using Domain_Models;
+using DTOs.Post;
+using MailKit.Security;
+using Microsoft.Extensions.Configuration;
+using MimeKit;
+using Services.Interfaces;
 
 namespace Services.Implementation
 {
@@ -24,12 +17,12 @@ namespace Services.Implementation
             _config = config;
             _newsletterRepository = repo;
         }
-        public void SendEmail(PostCreateDto createdPost, string authorFullName)
+        public void SendEmailToSubscribers(PostCreateDto createdPost, string authorFullName)
         {
-            var filteredEmails = _newsletterRepository.FilterEmailsByAuthorAndTags(authorFullName, createdPost.Tags);
+            var filteredEmails = _newsletterRepository.GetSubscribers(authorFullName, createdPost.Tags).ToList();
 
             int port = int.Parse(_config["EmailPort"]);
-            InternetAddressList emailList = new InternetAddressList();
+            InternetAddressList emailList = new();
 
             foreach (NewsLetter oneMail in filteredEmails)
             {
@@ -42,7 +35,8 @@ namespace Services.Implementation
             //{
             //    throw new DataException($"There is no user with this email {dBemail}.");
             //}
-            string input = String.Format($"The author {authorFullName} created a post,\n the title of the post is {createdPost.Title} containing the tags\n{createdPost.Tags}");
+
+            string input = String.Format($"The author {authorFullName} created a post,\n the title of the post is \"{createdPost.Title}\" containing the tags\n{createdPost.Tags}");
 
             //string mailstring = "Blah blah blah blah. Click <a href=\"http://127.0.0.1:5500/src/index.html\">here</a> for more information.";
             var email = new MimeMessage();
@@ -50,8 +44,6 @@ namespace Services.Implementation
             email.To.AddRange(emailList);
             email.Subject = "New post notification";
             email.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = input };
-
-            
 
             using var smpt = new MailKit.Net.Smtp.SmtpClient(); // mailkit.net.smpt
 

@@ -50,7 +50,7 @@ namespace Services.Implementation
                     {
                         return false;
                     }
-                    _emailService.SendEmail(entity, author.Fullname);
+                    _emailService.SendEmailToSubscribers(entity, author.Fullname);
 
                     return true;
                 }
@@ -67,9 +67,10 @@ namespace Services.Implementation
         }
 
 
-        public ICollection<PostDto> GetAll() => _mapper.Map<ICollection<PostDto>>(_repository.GetAll().ToList());
-
         //  I wonder if this 1 liner will cause any issues 
+        public ICollection<PostDto> GetAll() => _mapper.Map<ICollection<PostDto>>(_repository.GetAll().ToList());
+        //  It wasn't the method's fault :]
+
         public List<PostDto> GetPaginatedPosts(int pageIndex, PostFilter filters)
         {
             var query = _table.AsQueryable();
@@ -135,8 +136,8 @@ namespace Services.Implementation
                 found.Title = entity.Title;
                 found.Text = entity.Text;
                 found.Description = entity.Description;
-                found.UserId = entity.UserId;
-                //found.Image = entity.Image;
+                //found.UserId = entity.UserId; -   No, we can't change the author of the post dummy!
+                //found.Image = entity.Image; -     And I'm not sure if we want to be able to change the image(too much work[maybe?])
                 found.Tags = entity.Tags.GetPostTags();
 
                 return _repository.Update(found);

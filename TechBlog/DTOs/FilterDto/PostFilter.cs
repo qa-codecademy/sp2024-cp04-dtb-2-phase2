@@ -8,6 +8,7 @@ namespace DTOs.FilterDto
 {
     public class PostFilter
     {
+        public int PageIndex { get; set; }
         public string SortBy { get; set; } // "old", "new", "popular"
         public string Tags { get; set; }   // Comma-separated tags
         public int? Year { get; set; }     // Year filter
