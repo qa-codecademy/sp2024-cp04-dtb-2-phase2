@@ -1,4 +1,5 @@
-﻿using DTOs.FilterDto;
+﻿using Domain_Models;
+using DTOs.FilterDto;
 using DTOs.Post;
 
 namespace Services.Interfaces
@@ -10,7 +11,7 @@ namespace Services.Interfaces
         bool Add(PostCreateDto entity);
         bool Any(int id);
         bool Update(PostCreateDto entity, int id);
-        public List<PostDto> GetPaginatedPosts(int pageIndex, PostFilter filter);
+        public Task<PaginatedListDto> GetPaginatedPosts(int pageIndex, PostFilter filters);
         //bool Delete(PostDto entity);
         bool DeleteById(int id);
     }

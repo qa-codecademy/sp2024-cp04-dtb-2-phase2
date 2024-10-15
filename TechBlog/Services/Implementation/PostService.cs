@@ -8,6 +8,7 @@ using DTOs.Image;
 using DTOs.Post;
 using Mappers.MapperConfig;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Services.Interfaces;
 using System.Collections.Generic;
 
@@ -71,59 +72,50 @@ namespace Services.Implementation
         public ICollection<PostDto> GetAll() => _mapper.Map<ICollection<PostDto>>(_repository.GetAll().ToList());
         //  It wasn't the method's fault :]
 
-        public List<PostDto> GetPaginatedPosts(int pageIndex, PostFilter filters)
+        public async Task<PaginatedListDto> GetPaginatedPosts(int pageIndex, PostFilter filters)
         {
             var query = _table.AsQueryable();
 
-            // Apply sorting
-            if (filters.SortBy == "old")
+            if (!string.IsNullOrEmpty(filters.SortBy))
             {
-                query = query.OrderBy(b => b.PostingTime);
-                return _mapper.Map < List < PostDto >> (_repository.GetPaginatedPosts(pageIndex, query));
+                switch (filters.SortBy)
+                {
+                    case "old":
+                        query = query.OrderBy(b => b.PostingTime);
+                        break;
+                    case "new":
+                        query = query.OrderByDescending(b => b.PostingTime);
+                        break;
+                    case "popular":
+                        query = query.OrderByDescending(b => b.Stars.Count);
+                        break;
+                }
             }
-            else if (filters.SortBy == "new")
-            {
-                query = query.OrderByDescending(b => b.PostingTime);
-                return _mapper.Map<List<PostDto>>(_repository.GetPaginatedPosts(pageIndex, query));
 
-            }
-            else if (filters.SortBy == "popular")
+            if (filters.Tags != null && filters.Tags.Any())
             {
-                query = query.OrderByDescending(b => b.Stars.Count);
-                return _mapper.Map<List<PostDto>>(_repository.GetPaginatedPosts(pageIndex, query));
-
-            }
-            if (!string.IsNullOrEmpty(filters.Tags))
-            {
-                var tagsArray = filters.Tags.Split(',');
-                query = query.Where(p => tagsArray.All(tag => p.Tags.Contains(tag)));
-                return _mapper.Map<List<PostDto>>(_repository.GetPaginatedPosts(pageIndex, query));
-
+                foreach (var tag in filters.Tags)
+                {
+                    var currentTag = tag;
+                    query = query.Where(p => p.Tags.Contains(currentTag));
+                }
             }
 
             if (filters.Year.HasValue)
             {
                 query = query.Where(p => p.PostingTime.Year == filters.Year.Value);
-                return _mapper.Map<List<PostDto>>(_repository.GetPaginatedPosts(pageIndex, query));
-
             }
 
             if (filters.Month.HasValue)
             {
                 query = query.Where(p => p.PostingTime.Month == filters.Month.Value);
-                return _mapper.Map<List<PostDto>>(_repository.GetPaginatedPosts(pageIndex, query));
-
             }
 
-           return _mapper.Map<List<PostDto>>(_repository.GetPaginatedPosts(pageIndex, query));
+            var result =  await _repository.GetPaginatedPosts(pageIndex, query);
+            return _mapper.Map<PaginatedListDto>(result);
         }
-        //{
-        //    var posts = _repository.GetPaginatedPosts(pageIndex);
-        //    var mappedPosts = _mapper.Map<List<PostDto>>(posts);
-        //    return mappedPosts;
-        //}
 
-        public PostDetailsDto? GetById(int id) => _mapper.Map<PostDetailsDto>(_repository.GetById(id));
+        public PostDetailsDto? GetById(int id) => _mapper.Map<PostDetailsDto>(_repository.GetDetailedPost(id));
 
         public bool Update(PostCreateDto entity, int id)
         {

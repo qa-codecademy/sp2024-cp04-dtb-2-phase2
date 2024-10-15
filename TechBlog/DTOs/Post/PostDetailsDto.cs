@@ -9,7 +9,7 @@ namespace DTOs.Post
         public string Text { get; set; }
         public UserDto User { get; set; }
         public decimal Rating { get; set; }
-        public List<Comment> Comments { get; set; }
+        public List<CommentDto.CommentDto> Comments { get; set; }
         public DateTime PostingTime { get; set; }
         public string Image { get; set; }
         public List<string> Tags { get; set; }

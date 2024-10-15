@@ -14,13 +14,16 @@ namespace Mappers.MapperConfig
 
             CreateMap<Comment, CommentDto>();
 
+            CreateMap<PaginatedList, PaginatedListDto>();
+
             CreateMap<Post, PostDto>()
             .ForMember(x => x.Rating, y => y.MapFrom(z => z.Stars.GetPostRating()))
             .ForMember(x => x.Tags, y => y.MapFrom(z => z.Tags.GetPostTagsBE()));
 
             CreateMap<Post, PostDetailsDto>()
                 .ForMember(x => x.Rating, y => y.MapFrom(z => z.Stars.GetPostRating()))
-                .ForMember(x => x.Tags, y => y.MapFrom(z => z.Tags.GetPostTagsBE()));
+                .ForMember(x => x.Tags, y => y.MapFrom(z => z.Tags.GetPostTagsBE()))
+                .ForMember(x => x.Image, y => y.MapFrom(z => z.Image.Data));
 
 
             CreateMap<PostCreateDto, Post>()
