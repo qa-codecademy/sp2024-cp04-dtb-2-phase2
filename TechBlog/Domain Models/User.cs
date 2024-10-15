@@ -12,5 +12,6 @@
         public List<Comment> Comments { get; set; } // added a list of comments
         public List<Image> Images { get; set; } 
         public string FullName => $"{FirstName} {LastName}";
+        public bool IsAdmin { get; set; }
     }
 }

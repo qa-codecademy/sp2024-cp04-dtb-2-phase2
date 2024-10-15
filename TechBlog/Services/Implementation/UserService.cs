@@ -114,7 +114,7 @@ namespace Services.Implementation
                         new Claim("UserId", userDb.Id.ToString()),
                         new Claim ("userFullName", userDb.FirstName + ' ' + userDb.LastName),
                         new Claim(ClaimTypes.NameIdentifier, userDb.Email),
-                        new Claim("userRole", "")
+                        new Claim("isAdmin", userDb.IsAdmin.ToString())
                     })
             };
 

@@ -23,13 +23,15 @@ namespace TechBlogApi.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id}")]
         public IActionResult GetById([FromRoute]int id) 
         {
             if(!_postService.Any(id))
                 return NotFound($"No post was found with specified id - {id}");
 
-            return Ok(_postService.GetById(id));
+            var result = _postService.GetById(id);
+            return Ok(result);
+
         }
         [HttpPost("create")]
         public IActionResult Create([FromForm] PostCreateDto dto) 

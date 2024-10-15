@@ -6,6 +6,7 @@ using System.Diagnostics.Eventing.Reader;
 using DTOs.User;
 using Services.Interfaces;
 using System.Security.Claims;
+using Helpers;
 
 namespace TechBlogApi.Controllers
 {
@@ -15,10 +16,12 @@ namespace TechBlogApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly ITokenHelper _tokenService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, ITokenHelper tokenService)
         {
             _userService = userService;
+            _tokenService = tokenService;
         }
 
         [AllowAnonymous]
@@ -76,14 +79,14 @@ namespace TechBlogApi.Controllers
         {
             try
             {
-                var identity = HttpContext.User.Identity as ClaimsIdentity;
-                var identityUserId = identity.FindFirst("UserId").Value;
+                var loggedInUserId = _tokenService.GetUserId();
                 
-                if (identityUserId == null || !int.TryParse(identityUserId, out int loggedInUserId))
+                
+                if (loggedInUserId == null)
                 {
                     return StatusCode(StatusCodes.Status401Unauthorized, "User ID is missing or invalid.");
                 }
-                if (loggedInUserId != id && identity.FindFirst("userRole").Value != "Admin")
+                if (loggedInUserId != id && !_tokenService.GetUserRole())
                 {
                     return StatusCode(StatusCodes.Status403Forbidden);
                 }

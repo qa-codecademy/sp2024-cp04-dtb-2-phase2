@@ -17,11 +17,21 @@ namespace Data_Access.Implementations
 
         public Post GetDetailedPost(int id)
         {
-            return _table
-                .Include(x => x.User)
-                .Include(x => x.Stars)
-                .Include(x => x.Image)
-                .FirstOrDefault(x => x.Id.Equals(id));
+            try
+            {
+                var post =  _table
+                    .Include(x => x.User)
+                    .Include(x => x.Stars)
+                    .Include(x => x.Image)
+                    .Include(x => x.Comments)
+                    .FirstOrDefault(x => x.Id.Equals(id));
+                return post;
+            }
+            catch (Exception ex)
+            {
+                
+                throw;
+            }
         }
         public async Task<PaginatedList> GetPaginatedPosts(int pageIndex, IQueryable<Post> query)
         {
@@ -30,7 +40,8 @@ namespace Data_Access.Implementations
             var fullQuery = query
                 .Include(x => x.User)
                 .Include(x => x.Stars)
-                .Include(x => x.Image);
+                .Include(x => x.Image)
+                .Include(x => x.Comments);
 
             var posts = await fullQuery
                 .Skip((pageIndex - 1) * pageSize)

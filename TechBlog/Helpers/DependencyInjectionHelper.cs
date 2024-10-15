@@ -25,6 +25,8 @@ namespace Helpers
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IImageService, ImageService>();
             services.AddAutoMapper(typeof(AutoMapperProfile));
+
+            services.AddScoped<ITokenHelper, TokenHelper>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
         }

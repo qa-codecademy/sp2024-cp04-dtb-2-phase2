@@ -115,7 +115,20 @@ namespace Services.Implementation
             return _mapper.Map<PaginatedListDto>(result);
         }
 
-        public PostDetailsDto? GetById(int id) => _mapper.Map<PostDetailsDto>(_repository.GetDetailedPost(id));
+        public PostDetailsDto? GetById(int id)
+        {
+            try
+            {
+                var result = _repository.GetDetailedPost(id);
+                var mappedResult = _mapper.Map<PostDetailsDto>(result);
+                return mappedResult;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         public bool Update(PostCreateDto entity, int id)
         {
