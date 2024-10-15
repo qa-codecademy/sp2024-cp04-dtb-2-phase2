@@ -51,12 +51,25 @@ namespace TechBlogApi
                     };
                 });
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("CORSPolicy", builder =>
+                {
+                    builder.AllowAnyMethod()
+                           .AllowAnyHeader()
+                           .AllowCredentials()
+                           .SetIsOriginAllowed((hosts) => true);
+                });
+            });
+
+            //builder.Services.
+
             DependencyInjectionHelper.InjectServices(builder.Services);
             DependencyInjectionHelper.InjectRepositories(builder.Services);
 
 
             // Daniel's connection string: connectionString !!! !!!!!!
-            DependencyInjectionHelper.InjectDbContext(builder.Services, connectionString);
+            DependencyInjectionHelper.InjectDbContext(builder.Services, builder.Configuration.GetConnectionString("DefaultConnection"));
 
             //builder.Services.AddAuthentication(x =>
             //{
@@ -90,7 +103,11 @@ namespace TechBlogApi
                 app.UseSwaggerUI();
             }
 
+
+            app.UseCors("CORSPolicy");
+
             app.UseHttpsRedirection();
+
             app.UseAuthentication();
 
             app.UseAuthorization();

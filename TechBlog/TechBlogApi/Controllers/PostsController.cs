@@ -16,7 +16,7 @@ namespace TechBlogApi.Controllers
         {
             _postService = service;
         }
-        [HttpGet]
+        [HttpPost]
         public IActionResult GetAll([FromBody]PostFilter filters)
         {
             return Ok(_postService.GetPaginatedPosts(filters.PageIndex, filters));

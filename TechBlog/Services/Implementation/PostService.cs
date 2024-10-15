@@ -89,12 +89,10 @@ namespace Services.Implementation
             }
             else if (filters.SortBy == "popular")
             {
-                query = query.OrderByDescending(b => b.Stars.Count); // Assuming popularity by star count
+                query = query.OrderByDescending(b => b.Stars.Count);
                 return _mapper.Map<List<PostDto>>(_repository.GetPaginatedPosts(pageIndex, query));
 
             }
-
-            // Apply tag filter if provided
             if (!string.IsNullOrEmpty(filters.Tags))
             {
                 var tagsArray = filters.Tags.Split(',');
@@ -103,7 +101,6 @@ namespace Services.Implementation
 
             }
 
-            // Filter by month and year if provided
             if (filters.Year.HasValue)
             {
                 query = query.Where(p => p.PostingTime.Year == filters.Year.Value);

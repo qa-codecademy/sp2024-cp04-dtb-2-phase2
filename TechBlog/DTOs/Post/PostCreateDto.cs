@@ -13,7 +13,7 @@ namespace DTOs.Post
         public string Description { get; set; }
         [Required]
         public int UserId { get; set; }
-        //[Required] I'm not sure this is should be required
+        //[Required] I'm not sure if this should be required
         public IFormFile ImageFile { get; set; }
         public int ImageId { get; set; }
         [Required]
