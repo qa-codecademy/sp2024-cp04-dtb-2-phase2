@@ -15,9 +15,38 @@ namespace Data_Access.Implementations
             _context = context;
         }
 
-        public IEnumerable<NewsLetter> GetSubscribers(string author, List<string> tags)
+        public NewsLetter GetByEmail(string email)
         {
-            var newsLetters = _context.NewsLetterUsers.AsEnumerable();
+            return _context.Set<NewsLetter>().Include(x => x.Authors).FirstOrDefault(x => x.Email == email);
+        }
+
+        //public IEnumerable<NewsLetter> GetSubscribers(string author, List<string> tags)
+        //{
+        //    var newsLetters = _context.NewsLetterUsers.AsEnumerable();
+
+        //    if (!newsLetters.Any())
+        //        return newsLetters;
+
+        //    //Filter subscribers based on preferences or no preferences
+        //    var filteredNewsLetters = newsLetters
+        //        .Where(n =>
+        //            (n.Authors.IsNullOrEmpty() && n.Tags.IsNullOrEmpty()) || // No preferences
+        //            ( // Matching either the author or tags
+        //                (!n.Authors.IsNullOrEmpty() && n.Authors.Split(',')
+        //                    .Any(a => a.Trim().Contains(author, StringComparison.OrdinalIgnoreCase))) ||
+        //                (!n.Tags.IsNullOrEmpty() && n.Tags.Split(',')
+        //                    .Any(t => tags.Contains(t.Trim())))
+        //            )
+        //        );
+
+        //    return filteredNewsLetters;
+        //}
+        public IEnumerable<NewsLetter> GetSubscribers(int authorId, List<string> tags)
+        {
+            // Query NewsLetters including the related Users (Authors)
+            var newsLetters = _context.NewsLetterUsers
+                .Include(n => n.Authors) // Load the related authors
+                .AsEnumerable();
 
             if (!newsLetters.Any())
                 return newsLetters;
@@ -25,17 +54,17 @@ namespace Data_Access.Implementations
             // Filter subscribers based on preferences or no preferences
             var filteredNewsLetters = newsLetters
                 .Where(n =>
-                    (n.Authors.IsNullOrEmpty() && n.Tags.IsNullOrEmpty()) || // No preferences
-                    ( // Matching either the author or tags
-                        (!n.Authors.IsNullOrEmpty() && n.Authors.Split(',')
-                            .Any(a => a.Trim().Contains(author, StringComparison.OrdinalIgnoreCase))) ||
-                        (!n.Tags.IsNullOrEmpty() && n.Tags.Split(',')
-                            .Any(t => tags.Contains(t.Trim())))
+                    (!n.Authors.Any() && string.IsNullOrEmpty(n.Tags)) || // No preferences
+                    ( // Matching either the authorId or tags
+                        (n.Authors.Any(a => a.Id == authorId)) || // Match author by Id
+                        (!string.IsNullOrEmpty(n.Tags) && n.Tags.Split(',')
+                            .Any(t => tags.Contains(t.Trim(), StringComparer.OrdinalIgnoreCase))) // Match tags
                     )
                 );
 
             return filteredNewsLetters;
         }
+
 
         //  Maybe
 

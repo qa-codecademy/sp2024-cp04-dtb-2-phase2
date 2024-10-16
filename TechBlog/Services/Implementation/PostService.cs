@@ -51,7 +51,7 @@ namespace Services.Implementation
                     {
                         return false;
                     }
-                    _emailService.SendEmailToSubscribers(entity, author.Fullname);
+                    _emailService.SendEmailToSubscribers(entity);
 
                     return true;
                 }
