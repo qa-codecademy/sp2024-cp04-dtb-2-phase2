@@ -18,10 +18,10 @@ namespace Services.Implementation
 {
     public class UserService : IUserService
     {
-        private readonly IUserReposiotry _userRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IConfiguration _config;
 
-        public UserService(IUserReposiotry userReposiotry, IConfiguration config)
+        public UserService(IUserRepository userReposiotry, IConfiguration config)
         {
             this._userRepository = userReposiotry;
             _config = config;

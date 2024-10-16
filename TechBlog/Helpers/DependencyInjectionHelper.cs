@@ -35,7 +35,7 @@ namespace Helpers
         {
             services.AddTransient<INewsLetterRepository, NewsLetterRepository>();
             services.AddTransient<IPostRepository, PostRepository>();
-            services.AddTransient<IUserReposiotry, UserRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IStarRepository, StarRepository>();
             services.AddTransient<ICommentRepository, CommentRepository>();
             services.AddTransient<IImageRepository, ImageRepository>();

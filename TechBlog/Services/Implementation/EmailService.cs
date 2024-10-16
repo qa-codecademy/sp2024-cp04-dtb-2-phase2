@@ -1,8 +1,10 @@
 ﻿using Data_Access.Interfaces;
 using Domain_Models;
+using DTOs.NewsLetter;
 using DTOs.Post;
 using MailKit.Security;
 using Microsoft.Extensions.Configuration;
+using Microsoft.VisualBasic;
 using MimeKit;
 using Services.Interfaces;
 
@@ -12,14 +14,65 @@ namespace Services.Implementation
     {
         private readonly IConfiguration _config;
         private readonly INewsLetterRepository _newsletterRepository;
-        public EmailService(IConfiguration config, INewsLetterRepository repo) 
+        private readonly IUserRepository _userRepository;
+        public EmailService(IConfiguration config, INewsLetterRepository repo, IUserRepository userRepository) 
         {
             _config = config;
             _newsletterRepository = repo;
+            _userRepository = userRepository;
         }
-        public void SendEmailToSubscribers(PostCreateDto createdPost, string authorFullName)
+
+        public void Subscribe(string email)
         {
-            var filteredEmails = _newsletterRepository.GetSubscribers(authorFullName, createdPost.Tags).ToList();
+            var subscriber = _newsletterRepository.GetByEmail(email);
+            if(subscriber == null) 
+            {
+                _newsletterRepository.Add(new NewsLetter() { Email = email} );
+            }
+        }
+        public void Unsubscribe(string email) 
+        {
+            var subscriber = _newsletterRepository.GetByEmail(email);
+            if(subscriber != null) 
+            {
+              //  _newsletterRepository.DeleteById(subscriber.Id); // delete by Email
+            }
+        }
+
+        public void UpdateSubscriber(NewsLetterUpdateDto subscriber)
+        {
+            var found = _newsletterRepository.GetByEmail(subscriber.Email);
+            if (found != null)
+            {
+                
+                    var foundAuthor = _userRepository.GetById(subscriber.AuthorID);
+                    if (foundAuthor != null)
+                    {
+                        found.Authors.Add(foundAuthor);
+                    }
+                
+
+                if (!string.IsNullOrEmpty(subscriber.Tag)){
+                    if (string.IsNullOrEmpty(found.Tags))
+                    {
+                        var tagsList = found.Tags.Split(',').ToList();
+                        tagsList.Add(subscriber.Tag);
+                        var updatedTags = string.Join(",", tagsList);
+                        found.Tags = updatedTags;
+                    }
+                }
+                //var copyFound = new NewsLetter()
+                //{
+                //    Email = found.Email,
+                //    Authors = found.Authors,
+                //    Tags = found.Tags
+                //};
+                _newsletterRepository.Update(found);
+            }
+        }
+        public void SendEmailToSubscribers(PostCreateDto createdPost)
+        {
+            var filteredEmails = _newsletterRepository.GetSubscribers(createdPost.UserId, createdPost.Tags).ToList();
 
             int port = int.Parse(_config["EmailPort"]);
             InternetAddressList emailList = new();
@@ -36,7 +89,9 @@ namespace Services.Implementation
             //    throw new DataException($"There is no user with this email {dBemail}.");
             //}
 
-            string input = String.Format($"The author {authorFullName} created a post,\n the title of the post is \"{createdPost.Title}\" containing the tags\n{createdPost.Tags}");
+            var user = _userRepository.GetById(createdPost.UserId);
+
+            string input = String.Format($"The author {user.FullName} created a post,\n the title of the post is \"{createdPost.Title}\" containing the tags\n{createdPost.Tags}");
 
             //string mailstring = "Blah blah blah blah. Click <a href=\"http://127.0.0.1:5500/src/index.html\">here</a> for more information.";
             var email = new MimeMessage();

@@ -16,6 +16,7 @@ namespace Services.Implementation
 {
     public class PostService : IPostService
     {
+        private readonly IImageService _imageService;
         private readonly IPostRepository _repository;
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
@@ -23,8 +24,9 @@ namespace Services.Implementation
         private readonly TechBlogDbContext _context;
         private readonly DbSet<Post> _table;
 
-        public PostService(IPostRepository repo, IMapper mapper, IEmailService emailService, IUserService userService, TechBlogDbContext table)
+        public PostService(IPostRepository repo, IMapper mapper, IEmailService emailService, IUserService userService, TechBlogDbContext table, IImageService imageService)
         {
+            _imageService = imageService;
             _repository = repo;
             _mapper = mapper;
             _emailService = emailService;
@@ -34,8 +36,17 @@ namespace Services.Implementation
         }
         public bool Add(PostCreateDto entity)
         {
+            if (entity.ImageId != null)
+            {
+                var foundImage = _imageService.GetById(entity.ImageId);
+                if (foundImage != null)
+                {
+                    //PostCreateDto 
+                }
+            }
             using (var memoryStream = new MemoryStream())
             {
+               
                 entity.ImageFile.CopyTo(memoryStream);
                 var imageBytes = memoryStream.ToArray();
                 string base64String = Convert.ToBase64String(imageBytes);
@@ -51,7 +62,7 @@ namespace Services.Implementation
                     {
                         return false;
                     }
-                    _emailService.SendEmailToSubscribers(entity, author.Fullname);
+                    _emailService.SendEmailToSubscribers(entity);
 
                     return true;
                 }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data_Access.Implementations
 {
-    public class UserRepository : Repository<User> , IUserReposiotry 
+    public class UserRepository : Repository<User> , IUserRepository 
     {
         private TechBlogDbContext _dbContext;
         public UserRepository(TechBlogDbContext dbContext) : base(dbContext)
