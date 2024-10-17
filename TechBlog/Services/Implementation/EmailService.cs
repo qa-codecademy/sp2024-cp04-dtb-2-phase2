@@ -15,7 +15,7 @@ namespace Services.Implementation
         private readonly IConfiguration _config;
         private readonly INewsLetterRepository _newsletterRepository;
         private readonly IUserRepository _userRepository;
-        public EmailService(IConfiguration config, INewsLetterRepository repo, IUserRepository userRepository) 
+        public EmailService(IConfiguration config, INewsLetterRepository repo, IUserRepository userRepository)
         {
             _config = config;
             _newsletterRepository = repo;
@@ -25,17 +25,17 @@ namespace Services.Implementation
         public void Subscribe(string email)
         {
             var subscriber = _newsletterRepository.GetByEmail(email);
-            if(subscriber == null) 
+            if (subscriber == null)
             {
-                _newsletterRepository.Add(new NewsLetter() { Email = email} );
+                _newsletterRepository.Add(new NewsLetter() { Email = email });
             }
         }
-        public void Unsubscribe(string email) 
+        public void Unsubscribe(string email)
         {
             var subscriber = _newsletterRepository.GetByEmail(email);
-            if(subscriber != null) 
+            if (subscriber != null)
             {
-              //  _newsletterRepository.DeleteById(subscriber.Id); // delete by Email
+                _newsletterRepository.Delete(subscriber.Email);
             }
         }
 
@@ -44,21 +44,31 @@ namespace Services.Implementation
             var found = _newsletterRepository.GetByEmail(subscriber.Email);
             if (found != null)
             {
-                
-                    var foundAuthor = _userRepository.GetById(subscriber.AuthorID);
+
+                if (subscriber.AuthorID.HasValue)
+                {
+                    var foundAuthor = _userRepository.GetById(subscriber.AuthorID.Value);
                     if (foundAuthor != null)
                     {
                         found.Authors.Add(foundAuthor);
                     }
-                
+                }
 
-                if (!string.IsNullOrEmpty(subscriber.Tag)){
+
+                if (!string.IsNullOrEmpty(subscriber.Tag))
+                {
                     if (string.IsNullOrEmpty(found.Tags))
                     {
-                        var tagsList = found.Tags.Split(',').ToList();
-                        tagsList.Add(subscriber.Tag);
+                        List<string> tagsList = new()
+                        {
+                            subscriber.Tag
+                        };
                         var updatedTags = string.Join(",", tagsList);
                         found.Tags = updatedTags;
+                    } else {
+                        var foundTagsList = found.Tags.Split(',').ToList();
+                        foundTagsList.Add(subscriber.Tag);
+                        found.Tags = string.Join(',', foundTagsList);
                     }
                 }
                 //var copyFound = new NewsLetter()
@@ -68,6 +78,7 @@ namespace Services.Implementation
                 //    Tags = found.Tags
                 //};
                 _newsletterRepository.Update(found);
+
             }
         }
         public void SendEmailToSubscribers(PostCreateDto createdPost)
@@ -102,7 +113,7 @@ namespace Services.Implementation
 
             using var smpt = new MailKit.Net.Smtp.SmtpClient(); // mailkit.net.smpt
 
-            smpt.Connect(_config["EmailHost"], port , SecureSocketOptions.SslOnConnect);
+            smpt.Connect(_config["EmailHost"], port, SecureSocketOptions.SslOnConnect);
             smpt.Authenticate(_config["EmailUsername"], _config["EmailPassword"]);
             smpt.Send(email);
             smpt.Disconnect(true);

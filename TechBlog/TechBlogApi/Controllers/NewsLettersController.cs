@@ -1,8 +1,5 @@
-﻿using DTOs.Image;
-using DTOs.NewsLetter;
-using Microsoft.AspNetCore.Http;
+﻿using DTOs.NewsLetter;
 using Microsoft.AspNetCore.Mvc;
-using Services.Implementation;
 using Services.Interfaces;
 
 namespace TechBlogApi.Controllers

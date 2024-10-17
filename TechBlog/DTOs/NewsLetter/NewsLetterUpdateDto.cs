@@ -12,6 +12,6 @@ namespace DTOs.NewsLetter
         [Required]
         public string Email { get; set; }
         public string Tag { get; set; }
-        public int AuthorID { get; set; }
+        public int? AuthorID { get; set; }
     }
 }

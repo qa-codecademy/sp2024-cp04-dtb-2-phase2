@@ -36,38 +36,38 @@ namespace Services.Implementation
         }
         public bool Add(PostCreateDto entity)
         {
-            if (entity.ImageId != null)
+            var newPost = _mapper.Map<Post>(entity);
+            var imageFound = _imageService.GetById(entity.ImageId);
+
+            if (imageFound != null)
             {
-                var foundImage = _imageService.GetById(entity.ImageId);
-                if (foundImage != null)
+                newPost.ImageBase64 = imageFound.Data;
+            }
+
+            if (entity.ImageFile != null)
+            {
+                using (var memoryStream = new MemoryStream())
                 {
-                    //PostCreateDto 
+                    entity.ImageFile.CopyTo(memoryStream);
+                    var imageBytes = memoryStream.ToArray();
+                    string base64String = Convert.ToBase64String(imageBytes);
+                    newPost.ImageBase64 = base64String;
                 }
             }
-            using (var memoryStream = new MemoryStream())
+
+            if (_repository.Add(newPost))
             {
-               
-                entity.ImageFile.CopyTo(memoryStream);
-                var imageBytes = memoryStream.ToArray();
-                string base64String = Convert.ToBase64String(imageBytes);
+                var author = _userService.GetUserById(newPost.UserId);
 
-                var post = _mapper.Map<Post>(entity);
-                post.ImageBase64 = base64String;
-
-                if (_repository.Add(post))
+                if (author == null)
                 {
-                    var author = _userService.GetUserById(post.UserId);
-
-                    if (author == null)
-                    {
-                        return false;
-                    }
-                    _emailService.SendEmailToSubscribers(entity);
-
-                    return true;
+                    return false;
                 }
-                return false;
-            }   
+                _emailService.SendEmailToSubscribers(entity);
+
+                return true;
+            }
+            return false;
         }
 
         public bool Any(int id) => _repository.Any(id);
@@ -122,7 +122,7 @@ namespace Services.Implementation
                 query = query.Where(p => p.PostingTime.Month == filters.Month.Value);
             }
 
-            var result =  await _repository.GetPaginatedPosts(pageIndex, query);
+            var result = await _repository.GetPaginatedPosts(pageIndex, query);
             return _mapper.Map<PaginatedListDto>(result);
         }
 
@@ -144,7 +144,7 @@ namespace Services.Implementation
         public bool Update(PostCreateDto entity, int id)
         {
             var found = _repository.GetById(id);
-            if(found != null)
+            if (found != null)
             {
                 found.Title = entity.Title;
                 found.Text = entity.Text;
