@@ -11,6 +11,8 @@ namespace Services.Interfaces
     {
         void Upload(UploadImageDto uploadImageDto);
         ImageDto GetById(int? id);
+        List<ImageDto> GetAll();
+        List<ImageDto> GetUserImages (int id);
         
     }
 }

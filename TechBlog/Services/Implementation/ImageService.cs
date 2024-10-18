@@ -35,7 +35,7 @@ namespace Services.Implementation
 
                 var newImage = new Image
                 {
-                    //PostId = uploadImageDto.PostId,
+                    UserId = uploadImageDto.UserId.Value,
                     Data = base64String,
                     //ContentType = uploadImageDto.ImageFile.ContentType,
                     //Name = uploadImageDto.ImageFile.Name
@@ -56,6 +56,17 @@ namespace Services.Implementation
 
             ImageDto imageDto = _mapper.Map<ImageDto>(image);
             return imageDto;
+        }
+
+        public List<ImageDto> GetAll()
+        {
+            return _mapper.Map<List<ImageDto>>(_imageRepository.GetAll());
+        }
+
+        public List<ImageDto> GetUserImages(int id)
+        {
+            return _mapper.Map<List<ImageDto>>(_imageRepository.GetUserImages(id));
+        
         }
     }
 }

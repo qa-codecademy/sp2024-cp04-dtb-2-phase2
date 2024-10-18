@@ -20,5 +20,10 @@ namespace Data_Access.Implementations
         {
             return _imageContext.Images.FirstOrDefault(x => x.Id == id);
         }
+
+        public List<Image> GetUserImages(int id)
+        {
+            return _imageContext.Images.Where(x => x.UserId == id).ToList();
+        }
     }
 }

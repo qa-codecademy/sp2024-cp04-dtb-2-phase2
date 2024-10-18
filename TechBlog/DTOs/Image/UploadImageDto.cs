@@ -9,7 +9,7 @@ namespace DTOs.Image
 {
     public class UploadImageDto
     {
-        public int PostId { get; set; }
+        public int? UserId { get; set; }
         public IFormFile ImageFile { get; set; }
     }
 }

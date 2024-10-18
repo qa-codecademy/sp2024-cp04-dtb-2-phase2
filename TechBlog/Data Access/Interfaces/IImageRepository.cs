@@ -10,5 +10,6 @@ namespace Data_Access.Interfaces
     public interface IImageRepository : IRepository<Image>
     {
         Image GetById(int? id);
+        List<Image> GetUserImages(int id);
     }
 }
