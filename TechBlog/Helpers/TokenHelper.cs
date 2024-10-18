@@ -26,7 +26,7 @@ namespace Helpers
 
             return int.TryParse(identityUserId, out var userId) ? userId : 0; // Return 0 if
         }
-        public bool  GetUserRole()
+        public bool GetUserRole()
         {
             var identity = _httpContextAccessor.HttpContext.User.Identity as ClaimsIdentity;
             var identityUserRole = identity?.FindFirst("isAdmin")?.Value;

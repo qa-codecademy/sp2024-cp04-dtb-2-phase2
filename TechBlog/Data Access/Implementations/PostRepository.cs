@@ -30,7 +30,7 @@ namespace Data_Access.Implementations
             catch (Exception ex)
             {
                 
-                throw;
+                throw ex;
             }
         }
         public async Task<PaginatedList> GetPaginatedPosts(int pageIndex, IQueryable<Post> query)

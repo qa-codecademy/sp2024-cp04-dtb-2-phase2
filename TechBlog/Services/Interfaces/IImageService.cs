@@ -13,6 +13,7 @@ namespace Services.Interfaces
         ImageDto GetById(int? id);
         List<ImageDto> GetAll();
         List<ImageDto> GetUserImages (int id);
+        List<ImageDto> GetDefaultImages();
         
     }
 }

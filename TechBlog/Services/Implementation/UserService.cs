@@ -150,7 +150,7 @@ namespace Services.Implementation
 
         public ICollection<UserDto> GetAllUsers()
         {
-            return _userRepository.GetAll().Select(x => x.ToUserDto()).ToList(); ;
+            return _userRepository.GetAll().Select(x => x.ToUserDto()).ToList();
         }
 
         public void DeleteUser(int id)

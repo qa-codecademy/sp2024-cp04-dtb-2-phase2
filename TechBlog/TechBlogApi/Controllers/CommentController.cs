@@ -1,13 +1,8 @@
-﻿using Domain_Models;
-using DTOs.CommentDto;
+﻿using DTOs.CommentDto;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
-using Services.Interfaces;
-using System.Collections.Immutable;
 using System.Data;
-using System.Linq.Expressions;
 using System.Security.Claims;
 
 namespace TechBlogApi.Controllers

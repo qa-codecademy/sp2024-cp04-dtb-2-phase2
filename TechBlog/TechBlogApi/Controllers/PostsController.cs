@@ -1,6 +1,8 @@
 ﻿using Domain_Models;
 using DTOs.FilterDto;
 using DTOs.Post;
+using Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
@@ -12,9 +14,12 @@ namespace TechBlogApi.Controllers
     public class PostsController : ControllerBase
     {
         private readonly IPostService _postService;
-        public PostsController(IPostService service)
+        private readonly IUserService _userService;
+        private ITokenHelper _tokenHelper { get; set; }
+        public PostsController(IPostService service, ITokenHelper helper)
         {
             _postService = service;
+            _tokenHelper = helper;
         }
         [HttpPost]
         public async Task<IActionResult> GetPaginatedPosts([FromBody]PostFilter filters)
@@ -33,15 +38,22 @@ namespace TechBlogApi.Controllers
             return Ok(result);
 
         }
+        [Authorize]
         [HttpPost("create")]
         public IActionResult Create([FromForm] PostCreateDto dto) 
         {
-            if (!_postService.Add(dto))
-                return BadRequest("The post wasn't created successfully!");
+            var userId = _tokenHelper.GetUserId();
+            var found = _userService.GetUserById(userId);
+            if(found != null)
+            {
+                if (!_postService.Add(dto))
+                    return BadRequest("The post wasn't created successfully!");
 
-            return CreatedAtAction("Create", dto);
+                return CreatedAtAction("Create", dto);
+            }
+            return Unauthorized("Invalid user!");
         }
-
+        [Authorize]
         [HttpDelete("delete")]
         public IActionResult Delete(int id) 
         {
@@ -53,7 +65,7 @@ namespace TechBlogApi.Controllers
 
             return StatusCode(StatusCodes.Status500InternalServerError, "Post wasn't deleted successfully!");
         }
-
+        [Authorize]
         [HttpPut("update")]
         public IActionResult Update(PostCreateDto dto, int id)
         {

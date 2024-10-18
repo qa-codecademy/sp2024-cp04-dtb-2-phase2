@@ -11,5 +11,6 @@ namespace Data_Access.Interfaces
     {
         Image GetById(int? id);
         List<Image> GetUserImages(int id);
+        List<Image> GetDefaultImages();
     }
 }

@@ -14,7 +14,7 @@ namespace TechBlogApi.Controllers
             _emailService = emailService; 
         }
         [HttpPost]
-        public IActionResult Upload(string email)
+        public IActionResult Upload([FromRoute]string email)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace TechBlogApi.Controllers
             }
         }
         [HttpDelete]
-        public IActionResult Delete(string email)
+        public IActionResult Delete([FromRoute]string email)
         {
             try 
             {

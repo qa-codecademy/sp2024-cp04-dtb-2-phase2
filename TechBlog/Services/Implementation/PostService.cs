@@ -39,7 +39,6 @@ namespace Services.Implementation
         {
             var newPost = _mapper.Map<Post>(entity);
 
-
             if (entity.ImageId.HasValue)
             {
 
@@ -119,12 +118,12 @@ namespace Services.Implementation
                 }
             }
 
-            if (filters.Year.HasValue)
+            if (filters.Year.HasValue && filters.Year != 0)
             {
                 query = query.Where(p => p.PostingTime.Year == filters.Year.Value);
             }
 
-            if (filters.Month.HasValue)
+            if (filters.Month.HasValue && filters.Month != 0)
             {
                 query = query.Where(p => p.PostingTime.Month == filters.Month.Value);
             }

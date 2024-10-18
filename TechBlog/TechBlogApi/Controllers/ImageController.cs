@@ -65,7 +65,7 @@ namespace TechBlogApi.Controllers
         //    }
         //}
 
-        [HttpGet]
+        [HttpGet("all")]
         public IActionResult GetAll()
         {
             return Ok(_imageService.GetAll());
@@ -82,6 +82,12 @@ namespace TechBlogApi.Controllers
             }
             return Ok(_imageService.GetUserImages(loggedInUserId));
             
+        }
+        [Authorize]
+        [HttpGet("defaultimages")]
+        public IActionResult GetDefaultImages()
+        {
+            return Ok(_imageService.GetDefaultImages());
         }
     }
 }

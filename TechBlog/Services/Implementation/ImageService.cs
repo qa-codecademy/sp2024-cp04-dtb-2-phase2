@@ -19,7 +19,7 @@ namespace Services.Implementation
         private readonly IMapper _mapper;
 
 
-        public ImageService (IImageRepository imageRepository, IMapper mapper)
+        public ImageService(IImageRepository imageRepository, IMapper mapper)
         {
             _imageRepository = imageRepository;
             _mapper = mapper;
@@ -27,7 +27,7 @@ namespace Services.Implementation
         }
         public void Upload(UploadImageDto uploadImageDto)
         {
-            using (var memoryStream  = new MemoryStream())
+            using (var memoryStream = new MemoryStream())
             {
                 uploadImageDto.ImageFile.CopyTo(memoryStream);
                 var imageBytes = memoryStream.ToArray();
@@ -45,11 +45,11 @@ namespace Services.Implementation
             }
         }
 
-        public ImageDto GetById (int? id)
+        public ImageDto GetById(int? id)
         {
             Image image = _imageRepository.GetById(id);
 
-            if(image == null)
+            if (image == null)
             {
                 throw new NotFoundException($"The image for the post with id: {id} was not found");
             }
@@ -66,7 +66,12 @@ namespace Services.Implementation
         public List<ImageDto> GetUserImages(int id)
         {
             return _mapper.Map<List<ImageDto>>(_imageRepository.GetUserImages(id));
-        
+
+        }
+
+        public List<ImageDto> GetDefaultImages()
+        {
+            return _mapper.Map<List<ImageDto>>(_imageRepository.GetDefaultImages());
         }
     }
 }
