@@ -13,7 +13,7 @@ namespace Helpers
     {
         public static void InjectDbContext(IServiceCollection services, string connectionString)
         {
-            services.AddDbContext<TechBlogDbContext>(x => x.UseSqlServer(connectionString));
+            services.AddDbContext<TechBlogDbContext>(x => x.UseNpgsql(connectionString));
         }
 
         public static void InjectServices(IServiceCollection services)
