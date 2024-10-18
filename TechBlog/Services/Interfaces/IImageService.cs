@@ -10,7 +10,7 @@ namespace Services.Interfaces
     public interface IImageService
     {
         void Upload(UploadImageDto uploadImageDto);
-        ImageDto GetById(int id);
+        ImageDto GetById(int? id);
         
     }
 }

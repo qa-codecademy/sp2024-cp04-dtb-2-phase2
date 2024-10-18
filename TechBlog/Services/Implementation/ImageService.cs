@@ -45,7 +45,7 @@ namespace Services.Implementation
             }
         }
 
-        public ImageDto GetById (int id)
+        public ImageDto GetById (int? id)
         {
             Image image = _imageRepository.GetById(id);
 

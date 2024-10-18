@@ -14,7 +14,7 @@ namespace DTOs.Post
         [Required]
         public int UserId { get; set; }
         public IFormFile? ImageFile { get; set; }
-        public int ImageId { get; set; }
+        public int? ImageId { get; set; }
         [Required]
         public List<string> Tags { get; set; }
     }

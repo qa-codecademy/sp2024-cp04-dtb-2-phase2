@@ -10,6 +10,7 @@ using Mappers.MapperConfig;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Services.Interfaces;
+using System;
 using System.Collections.Generic;
 
 namespace Services.Implementation
@@ -37,11 +38,17 @@ namespace Services.Implementation
         public bool Add(PostCreateDto entity)
         {
             var newPost = _mapper.Map<Post>(entity);
-            var imageFound = _imageService.GetById(entity.ImageId);
 
-            if (imageFound != null)
+
+            if (entity.ImageId.HasValue)
             {
-                newPost.ImageBase64 = imageFound.Data;
+
+                var imageFound = _imageService.GetById(entity.ImageId);
+
+                if (imageFound != null)
+                {
+                    newPost.ImageBase64 = imageFound.Data;
+                }
             }
 
             if (entity.ImageFile != null)
