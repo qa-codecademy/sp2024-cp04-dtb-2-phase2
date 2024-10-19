@@ -46,6 +46,7 @@ namespace TechBlogApi.Controllers
             var found = _userService.GetUserById(userId);
             if(found != null)
             {
+                dto.UserId = userId;
                 if (!_postService.Add(dto))
                     return BadRequest("The post wasn't created successfully!");
 

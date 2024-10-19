@@ -83,7 +83,7 @@ namespace Services.Implementation
         }
         public void SendEmailToSubscribers(PostCreateDto createdPost)
         {
-            var filteredEmails = _newsletterRepository.GetSubscribers(createdPost.UserId, createdPost.Tags).ToList();
+            var filteredEmails = _newsletterRepository.GetSubscribers(createdPost.UserId.Value, createdPost.Tags).ToList();
 
             int port = int.Parse(_config["EmailPort"]);
             InternetAddressList emailList = new();
@@ -100,7 +100,7 @@ namespace Services.Implementation
             //    throw new DataException($"There is no user with this email {dBemail}.");
             //}
 
-            var user = _userRepository.GetById(createdPost.UserId);
+            var user = _userRepository.GetById(createdPost.UserId.Value);
 
             string input = String.Format($"The author {user.FullName} created a post,\n the title of the post is \"{createdPost.Title}\" containing the tags\n{createdPost.Tags}");
 
