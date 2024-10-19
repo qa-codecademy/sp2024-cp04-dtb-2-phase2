@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Services.Implementation
 {
@@ -109,14 +110,26 @@ namespace Services.Implementation
                 }
             }
 
+            //if (filters.Tags != null && filters.Tags.Any())
+            //{
+            //    var tagList = filters.Tags; // list of tags to filter by
+            //    query = query.Where(p => p.Tags.Any(t => tagList.Contains(t)));
+            //}
+            var queryedArrayquery = _table.AsQueryable();
             if (filters.Tags != null && filters.Tags.Any())
             {
                 foreach (var tag in filters.Tags)
                 {
                     var currentTag = tag;
-                    query = query.Where(p => p.Tags.Contains(currentTag));
+                    queryedArrayquery = query.Where(p => p.Tags.Contains(currentTag));
+                    
                 }
             }
+            
+            //foreach (var tag in filters.Tags)
+            //{
+            //    var forEachList = query.Where(p => p.Tags.Contains(currentTag));
+            //}
 
             if (filters.Year.HasValue && filters.Year != 0)
             {
