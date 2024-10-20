@@ -8,6 +8,7 @@ namespace DTOs.CommentDto
 {
     public class CommentDto
     {
+        public int UserId { get; set; }
         public string Name { get; set; }
         public string Text { get; set; }
         public int PostId { get; set; }

@@ -10,6 +10,7 @@ namespace DTOs.Post
     public class PostDto
     {
         public int Id { get; set; }
+        public int Comments { get; set; }
         public string Title { get; set; } // ?
         public string Description { get; set; } //?
         public decimal Rating { get; set; }
