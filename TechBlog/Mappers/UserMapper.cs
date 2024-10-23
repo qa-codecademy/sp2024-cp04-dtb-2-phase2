@@ -24,6 +24,7 @@ namespace Mappers
         {
             return new LoginResponseDto
             {
+                Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,

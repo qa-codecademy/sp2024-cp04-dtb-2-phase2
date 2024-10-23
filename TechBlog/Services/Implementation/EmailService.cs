@@ -1,4 +1,5 @@
-﻿using Data_Access.Interfaces;
+﻿using AutoMapper;
+using Data_Access.Interfaces;
 using Domain_Models;
 using DTOs.NewsLetter;
 using DTOs.Post;
@@ -15,11 +16,13 @@ namespace Services.Implementation
         private readonly IConfiguration _config;
         private readonly INewsLetterRepository _newsletterRepository;
         private readonly IUserRepository _userRepository;
-        public EmailService(IConfiguration config, INewsLetterRepository repo, IUserRepository userRepository)
+        private IMapper _mapper { get; set; }
+        public EmailService(IConfiguration config, INewsLetterRepository repo, IUserRepository userRepository, IMapper mapper)
         {
             _config = config;
             _newsletterRepository = repo;
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         public void Subscribe(string email)
@@ -81,6 +84,8 @@ namespace Services.Implementation
 
             }
         }
+
+
         public void SendEmailToSubscribers(PostCreateDto createdPost)
         {
             var filteredEmails = _newsletterRepository.GetSubscribers(createdPost.UserId.Value, createdPost.Tags).ToList();
@@ -117,6 +122,12 @@ namespace Services.Implementation
             smpt.Authenticate(_config["EmailUsername"], _config["EmailPassword"]);
             smpt.Send(email);
             smpt.Disconnect(true);
+        }
+
+        public NewsLetterDto GetSubscriberByEmail(string email)
+        {
+            var found = _newsletterRepository.GetByEmail(email);
+            return _mapper.Map<NewsLetterDto>(found);
         }
     }
 }

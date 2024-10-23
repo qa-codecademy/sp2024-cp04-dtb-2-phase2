@@ -2,6 +2,7 @@
 using Domain_Models;
 using DTOs.CommentDto;
 using DTOs.Image;
+using DTOs.NewsLetter;
 using DTOs.Post;
 using DTOs.User;
 namespace Mappers.MapperConfig
@@ -10,6 +11,10 @@ namespace Mappers.MapperConfig
     {
         public AutoMapperProfile()
         {
+            CreateMap<NewsLetter, NewsLetterDto>()
+                .ForMember(x => x.Tags, y => y.MapFrom(z => z.Tags.GetPostTagsBE()));
+                //.ForMember(x => x.Authors, y => y.MapFrom(z => z.Authors));
+
             CreateMap<User, UserDto>();
 
             CreateMap<Comment, CommentDto>()

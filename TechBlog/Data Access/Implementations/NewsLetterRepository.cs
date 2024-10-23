@@ -33,7 +33,7 @@ namespace Data_Access.Implementations
 
         public NewsLetter GetByEmail(string email)
         {
-            return _context.Set<NewsLetter>().Include(x => x.Authors).FirstOrDefault(x => x.Email == email);
+            return _table.Include(x => x.Authors).FirstOrDefault(x => x.Email == email);
         }
 
         //public IEnumerable<NewsLetter> GetSubscribers(string author, List<string> tags)

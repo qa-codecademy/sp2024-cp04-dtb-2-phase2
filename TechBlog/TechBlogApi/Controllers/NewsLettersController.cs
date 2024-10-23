@@ -13,8 +13,22 @@ namespace TechBlogApi.Controllers
         {
             _emailService = emailService; 
         }
+        [HttpGet]
+        public IActionResult Get(string email) 
+        {
+            try
+            {
+                var found = _emailService.GetSubscriberByEmail(email);
+                return Ok(found);
+            }
+            catch(Exception ex) 
+            {
+                return BadRequest($"Something went wrong, please try again later!\n\n{ex.Message}");
+            }
+        }
+
         [HttpPost]
-        public IActionResult Upload([FromRoute]string email)
+        public IActionResult Upload(string email)
         {
             try
             {
