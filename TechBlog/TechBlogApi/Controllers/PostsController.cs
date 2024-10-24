@@ -31,11 +31,15 @@ namespace TechBlogApi.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById([FromRoute]int id) 
         {
-            if(!_postService.Any(id))
-                return NotFound($"No post was found with specified id - {id}");
+            if (id < 1) return BadRequest("Values below 1 are invalid!");
+            //if(!_postService.Any(id))
+            //    return NotFound($"No post was found with specified id - {id}");
 
             var result = _postService.GetById(id);
-            return Ok(result);
+            if (result != null)
+                return Ok(result);
+
+            return NotFound("No post found!");
 
         }
         [Authorize]

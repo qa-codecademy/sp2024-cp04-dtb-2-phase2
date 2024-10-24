@@ -5,6 +5,7 @@ using DTOs.Image;
 using DTOs.NewsLetter;
 using DTOs.Post;
 using DTOs.User;
+using Microsoft.VisualBasic;
 namespace Mappers.MapperConfig
 {
     public class AutoMapperProfile : Profile
@@ -27,6 +28,7 @@ namespace Mappers.MapperConfig
             .ForMember(x => x.Tags, y => y.MapFrom(z => z.Tags.GetPostTagsBE()))
             .ForMember(x => x.Image, y => y.MapFrom(z => z.Image.Data))
             .ForMember(x => x.Comments, y => y.MapFrom(z => z.Comments.Count));
+
 
             CreateMap<Post, PostDetailsDto>()
                 .ForMember(x => x.Rating, y => y.MapFrom(z => z.Stars.GetPostRating()))
