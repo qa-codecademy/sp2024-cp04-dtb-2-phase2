@@ -37,7 +37,7 @@ namespace TechBlogApi.Controllers
                     return BadRequest("No Email given");
                 }
                 _emailService.Subscribe(email);
-                return Ok();
+                return Ok("Succesfully subscribed");
 
             }
             catch (Exception ex)
@@ -58,9 +58,9 @@ namespace TechBlogApi.Controllers
 
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
-        }
+        } 
         [HttpDelete]
-        public IActionResult Delete([FromRoute]string email)
+        public IActionResult Delete(string email)
         {
             try 
             {
