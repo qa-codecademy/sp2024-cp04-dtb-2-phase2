@@ -59,6 +59,9 @@ namespace Data_Access.Implementations
             };
         }
 
-
+        public List<Post> GetUserPosts(int id)
+        {
+            return _table.Where(x => x.UserId == id).ToList();
+        }
     }
 }

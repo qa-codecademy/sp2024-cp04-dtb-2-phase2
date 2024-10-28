@@ -7,5 +7,7 @@ namespace Data_Access.Interfaces
     {
         public Task<PaginatedList> GetPaginatedPosts(int pageIndex, IQueryable<Post> query);
         public Post GetDetailedPost(int id);
+        public List<Post> GetUserPosts(int id);
+
     }
 }

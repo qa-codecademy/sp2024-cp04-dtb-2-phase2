@@ -52,14 +52,17 @@ namespace Services.Implementation
 
             if (entity.ImageFile != null)
             {
-                using (var memoryStream = new MemoryStream())
-                {
-                    entity.ImageFile.CopyTo(memoryStream);
-                    var imageBytes = memoryStream.ToArray();
-                    string base64String = Convert.ToBase64String(imageBytes);
-                    newPost.ImageBase64 = base64String;
-                }
+                //using (var memoryStream = new MemoryStream())
+                //{
+                //    entity.ImageFile.CopyTo(memoryStream);
+                //    var imageBytes = memoryStream.ToArray();
+                //    string base64String = Convert.ToBase64String(imageBytes);
+                //    newPost.ImageBase64 = base64String;
+                //}
+                newPost.ImageBase64 = entity.ImageFile;
             }
+
+            newPost.PostingTime = DateTime.UtcNow;
 
             if (_repository.Add(newPost))
             {
@@ -162,6 +165,12 @@ namespace Services.Implementation
                 return _repository.Update(found);
             }
             return false;
+        }
+
+        public List<PostDto> GetUserPosts(int userId)
+        {
+            var posts = _repository.GetUserPosts(userId);
+            return _mapper.Map<List<PostDto>>(posts);
         }
     }
 }

@@ -14,5 +14,6 @@ namespace Services.Interfaces
         public Task<PaginatedListDto> GetPaginatedPosts(int pageIndex, PostFilter filters);
         //bool Delete(PostDto entity);
         bool DeleteById(int id);
+        public List<PostDto> GetUserPosts(int userId);
     }
 }

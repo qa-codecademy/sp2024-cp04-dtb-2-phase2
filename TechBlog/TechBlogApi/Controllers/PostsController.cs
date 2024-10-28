@@ -16,11 +16,32 @@ namespace TechBlogApi.Controllers
         private readonly IPostService _postService;
         private readonly IUserService _userService;
         private ITokenHelper _tokenHelper { get; set; }
-        public PostsController(IPostService service, ITokenHelper helper)
+        public PostsController(IPostService service, ITokenHelper helper, IUserService userService)
         {
             _postService = service;
             _tokenHelper = helper;
+            _userService = userService;
         }
+        [HttpGet("authorposts/{authorId}")]
+        public IActionResult GetUserPosts([FromRoute] int authorId) 
+        {
+            try
+            {
+                if (authorId < 1) 
+                {
+                    return BadRequest("Please enter positive values!");
+                }
+
+                var posts = _postService.GetUserPosts(authorId);
+                return Ok(posts);
+
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> GetPaginatedPosts([FromBody]PostFilter filters)
         {
@@ -44,7 +65,7 @@ namespace TechBlogApi.Controllers
         }
         [Authorize]
         [HttpPost("create")]
-        public IActionResult Create([FromForm] PostCreateDto dto) 
+        public IActionResult Create([FromBody] PostCreateDto dto) 
         {
             var userId = _tokenHelper.GetUserId();
             var found = _userService.GetUserById(userId);
