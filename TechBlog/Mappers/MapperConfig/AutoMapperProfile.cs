@@ -6,6 +6,7 @@ using DTOs.NewsLetter;
 using DTOs.Post;
 using DTOs.User;
 using Microsoft.VisualBasic;
+using System.IO.Compression;
 namespace Mappers.MapperConfig
 {
     public class AutoMapperProfile : Profile
@@ -26,15 +27,14 @@ namespace Mappers.MapperConfig
             CreateMap<Post, PostDto>()
             .ForMember(x => x.Rating, y => y.MapFrom(z => z.Stars.GetPostRating()))
             .ForMember(x => x.Tags, y => y.MapFrom(z => z.Tags.GetPostTagsBE()))
-            .ForMember(x => x.Image, y => y.MapFrom(z => z.Image.Data))
+            .ForMember(x => x.Image, y => y.MapFrom(z => z.ImageBase64 ?? z.Image.Data))
             .ForMember(x => x.Comments, y => y.MapFrom(z => z.Comments.Count));
 
 
             CreateMap<Post, PostDetailsDto>()
                 .ForMember(x => x.Rating, y => y.MapFrom(z => z.Stars.GetPostRating()))
                 .ForMember(x => x.Tags, y => y.MapFrom(z => z.Tags.GetPostTagsBE()))
-                .ForMember(x => x.Image, y => y.MapFrom(z => z.Image.Data));
-
+                .ForMember(dto => dto.Image, opt => opt.MapFrom(src => src.ImageBase64 ?? src.Image.Data));
 
             CreateMap<PostCreateDto, Post>()
                 .ForMember(x => x.Tags, y => y.MapFrom(z => z.Tags.GetPostTags()));
