@@ -54,5 +54,18 @@ namespace TechBlogApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+        [HttpGet]
+        public IActionResult GetPostStars (int postId)
+        {
+            try
+            {
+                _starService.GetStarsByPostId(postId);
+                return Ok();
+            }catch
+            {
+                return BadRequest("something went wrong");
+            }
+        }
     }
 }

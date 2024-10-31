@@ -48,22 +48,14 @@ namespace Services.Implementation
         // OVA BI TREBALO VO POST SERVISOT DA ODI
 
         // Ke odi vo mapperot sega ( :
-        public double GetAvgRatingForPost(Post post)
+        public List<Star> GetStarsByPostId(int postId)
         {
-            var result =  _repository.GetAllStarsForPost(post.Id);
-            if (result.Count > 0)
-                throw new Exception("There are no stars for this post!");
+            var result =  _repository.GetAllStarsForPost(postId);
+            if (result.Count < 0)
+                return new List<Star>();
 
-            int rating = 0;
-            foreach(var item in result)
-            {
-                rating += item.Rating;
-            }
-            return rating/result.Count;
-
-
+            return result;
 
         }
-
     }
 }
