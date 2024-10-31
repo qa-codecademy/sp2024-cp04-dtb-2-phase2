@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DTOs.StarsDto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
@@ -16,11 +17,11 @@ namespace TechBlogApi.Controllers
             _starService = starService;
         }
         [HttpPost("AddRating")]
-        public IActionResult AddStar(int userId, int postId, int rating)
+        public IActionResult AddStar(CreateStarDto dto)
         {
             try
             {
-                _starService.AddRating(userId, postId, rating);
+                _starService.AddRating(dto);
                 return Ok("Successfully added star!");
             }
             catch (Exception ex)
@@ -29,11 +30,11 @@ namespace TechBlogApi.Controllers
             }
         }
         [HttpDelete("RemoveRating")]
-        public IActionResult DeleteStar(int userId, int postId)
+        public IActionResult DeleteStar(RemoveStarDto dto)
         {
             try
             {
-                _starService.RemoveRating(userId, postId);
+                _starService.RemoveRating(dto);
                 return Ok("Successfully removed star!");
             }
             catch (Exception ex)
@@ -42,11 +43,11 @@ namespace TechBlogApi.Controllers
             }
         }
         [HttpPut]
-        public IActionResult UpdateStar(int userId, int postId, int rating)
+        public IActionResult UpdateStar(CreateStarDto dto)
         {
             try
             {
-                _starService.UpdateRating(userId, postId, rating);
+                _starService.UpdateRating(dto);
                 return Ok("Successfully updated star!");
             }
             catch (Exception ex)
@@ -55,16 +56,17 @@ namespace TechBlogApi.Controllers
             }
         }
 
-        [HttpGet]
-        public IActionResult GetPostStars (int postId)
+        [HttpPost]
+        public IActionResult GetPostStar (RemoveStarDto dto)
         {
             try
             {
-                _starService.GetStarsByPostId(postId);
-                return Ok();
-            }catch
+                var result = _starService.GetStarByUserAndPostId(dto);
+                return Ok(result);
+            }catch (Exception ex)
             {
-                return BadRequest("something went wrong");
+
+                return BadRequest($"something went wrong\n{ex.Message}");
             }
         }
     }

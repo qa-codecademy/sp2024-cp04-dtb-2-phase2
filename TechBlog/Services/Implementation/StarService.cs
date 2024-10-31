@@ -1,5 +1,6 @@
 ﻿using Data_Access.Interfaces;
 using Domain_Models;
+using DTOs.StarsDto;
 using Mappers;
 using Services.Interfaces;
 
@@ -13,49 +14,49 @@ namespace Services.Implementation
             _repository = repository;
         }
 
-        public void AddRating(int userId, int postId, int rating)
+        public void AddRating(CreateStarDto dto)
         {
-            if (userId < 0 || postId < 0)
-                throw new ArgumentOutOfRangeException(nameof(userId), nameof(postId), nameof(rating));
+            if (dto.UserId < 0 || dto.PostId < 0)
+                throw new ArgumentOutOfRangeException(nameof(dto.UserId), nameof(dto.PostId), nameof(dto.Rating));
             else
             {
-                var star = StarMapper.ToDomainModel(userId, postId, rating);
+                var star = StarMapper.ToDomainModel(dto);
                 _repository.Add(star);
             }
         }
 
-        public void RemoveRating(int userId, int postId)
+        public void RemoveRating(RemoveStarDto dto)
         {
-            if (userId < 0 || postId < 0)
-                throw new ArgumentOutOfRangeException(nameof(userId), nameof(postId));
+            if (dto.UserId< 0 || dto.PostId< 0)
+                throw new ArgumentOutOfRangeException(nameof(dto.UserId), nameof(dto.PostId));
             else
             {
-                var star = StarMapper.ToDomainModel(userId, postId, 1);
-                //_repository.DeleteById(star); Tuka treba Id na svezdata taka?
+                var found = _repository.GetStarByUserAndPostId(dto.UserId, dto.PostId);
+                if(found != null)
+                {
+                    _repository.DeleteById(found.Id); 
+                }
             }
         }
 
-        public void UpdateRating(int userId, int postId,int rating)
+        public void UpdateRating(CreateStarDto dto)
         {
-            if (userId < 0 || postId < 0 || rating < 0)
-                throw new ArgumentOutOfRangeException(nameof(userId), nameof(postId), nameof(rating));
+            if (dto.UserId < 0 || dto.PostId < 0 || dto.Rating< 0)
+                throw new ArgumentOutOfRangeException(nameof(dto.UserId), nameof(dto.PostId), nameof(dto.Rating));
             else
             {
-                var star = StarMapper.ToDomainModel(userId,postId, rating);
-                _repository.Update(star);
+                var found = _repository.GetStarByUserAndPostId(dto.UserId, dto.PostId);
+                found.Rating = dto.Rating;
+                _repository.Update(found);
             }
         }
         // OVA BI TREBALO VO POST SERVISOT DA ODI
 
         // Ke odi vo mapperot sega ( :
-        public List<Star> GetStarsByPostId(int postId)
+        public Star GetStarByUserAndPostId(RemoveStarDto dto)
         {
-            var result =  _repository.GetAllStarsForPost(postId);
-            if (result.Count < 0)
-                return new List<Star>();
-
+            var result = _repository.GetStarByUserAndPostId(dto.UserId, dto.PostId);
             return result;
-
         }
     }
 }

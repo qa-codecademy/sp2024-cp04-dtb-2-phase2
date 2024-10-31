@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Domain_Models
 {
@@ -9,6 +10,7 @@ namespace Domain_Models
         [Range(0,5)]
         public int Rating { get; set; }
 
+        [JsonIgnore]
         public User User { get; set; }
         //public Post Post { get; set; }
     }

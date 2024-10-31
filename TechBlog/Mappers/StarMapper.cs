@@ -1,12 +1,17 @@
 ﻿using Domain_Models;
+using DTOs.StarsDto;
 
 namespace Mappers
 {
     public static class StarMapper
     {
-        public static Star ToDomainModel(int userId, int postId, int rating)
+        public static Star ToDomainModel(CreateStarDto dto)
         {
-            return new Star() { Id = userId, PostId = postId, Rating=RatingRangeCheck(rating) };
+            return new Star() { UserId = dto.UserId, PostId = dto.PostId, Rating = dto.Rating};
+        }
+        public static Star ToDomainModel(RemoveStarDto dto)
+        {
+            return new Star() { UserId = dto.UserId, PostId = dto.PostId};
         }
         public static int RatingRangeCheck ( int userRating)
         {
