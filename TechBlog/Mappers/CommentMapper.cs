@@ -13,15 +13,16 @@ namespace Mappers
                 Text = comment.Text,
                 PostId = comment.PostId,
                 Date = comment.Date,
+                UserId = comment.UserId,
 
             };
         }
 
-        public static Comment ToComment(this AddCommentDto addComment)
+        public static Comment ToComment(this AddCommentDto addComment, int userId)
         {
-            return new Comment(addComment.Name, addComment.Text)
+            return new Comment(addComment.Name, addComment.Text, userId)
             {
-                PostId = addComment.PostId
+                PostId = addComment.PostId,
 
             };
         }

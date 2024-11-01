@@ -1,6 +1,8 @@
 ﻿using DTOs.CommentDto;
+using Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Services.Implementation;
 using Services.Interfaces;
 using System.Data;
 using System.Security.Claims;
@@ -12,10 +14,14 @@ namespace TechBlogApi.Controllers
     public class CommentController : ControllerBase
     {
         private readonly ICommentService _commentService;
+        private readonly IUserService _userService;
+        private ITokenHelper _tokenHelper { get; set; }
 
-        public CommentController(ICommentService commentService)
+        public CommentController(ICommentService commentService, ITokenHelper tokenHelper, IUserService userService)
         {
             _commentService = commentService;
+            _userService = userService;
+            _tokenHelper = tokenHelper;
         }
 
         [HttpGet]
@@ -53,14 +59,21 @@ namespace TechBlogApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
+        [Authorize]
         [HttpPost]
         public ActionResult Add([FromBody] AddCommentDto addCommentDto)
         {
             try
             {
-                _commentService.Add(addCommentDto);
-                return Ok();
+                var userId = _tokenHelper.GetUserId();
+                var found = _userService.GetUserById(userId);
+                if (found != null)
+                {
+                    _commentService.Add(addCommentDto, userId);
+
+                    return CreatedAtAction("Add", addCommentDto);
+                }
+                return Unauthorized("Invalid user!");
             }
             catch (DataException ex)
             {

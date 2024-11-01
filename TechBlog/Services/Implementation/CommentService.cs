@@ -16,14 +16,14 @@ namespace Services.Implementation
             _commentRepository = commentRepository;
         }
 
-        public void Add(AddCommentDto addCommentDto)
+        public void Add(AddCommentDto addCommentDto, int userId)
         {
             if (addCommentDto == null)
             {
                 throw new DataException("User cannot be null");
             }
 
-            var comment = CommentMapper.ToComment(addCommentDto);
+            var comment = CommentMapper.ToComment(addCommentDto, userId);
 
             _commentRepository.Add(comment);
 

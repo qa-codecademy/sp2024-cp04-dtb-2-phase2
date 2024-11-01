@@ -18,7 +18,7 @@ namespace Data_Access.Implementations
 
         public Star GetStarByUserAndPostId(int userId, int postId)
         {
-            return _context.Stars.Include(x => x.User).AsNoTracking().FirstOrDefault(x => x.UserId == userId & x.PostId == postId);
+            return _context.Stars.Include(x => x.User).AsNoTracking().FirstOrDefault(x => x.UserId == userId && x.PostId == postId);
         }
     }
 }

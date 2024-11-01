@@ -55,6 +55,7 @@ namespace TechBlogApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [AllowAnonymous]
 
         [HttpPost]
         public IActionResult GetPostStar (RemoveStarDto dto)

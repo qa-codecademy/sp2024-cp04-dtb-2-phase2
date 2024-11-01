@@ -15,7 +15,7 @@ namespace TechBlogApi.Controllers
     {
         private readonly IPostService _postService;
         private readonly IUserService _userService;
-        private ITokenHelper _tokenHelper { get; set; }
+        private  ITokenHelper _tokenHelper { get; set; }
         public PostsController(IPostService service, ITokenHelper helper, IUserService userService)
         {
             _postService = service;
