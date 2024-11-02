@@ -9,6 +9,7 @@ using System.Security.Claims;
 
 namespace TechBlogApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CommentController : ControllerBase
@@ -23,7 +24,7 @@ namespace TechBlogApi.Controllers
             _userService = userService;
             _tokenHelper = tokenHelper;
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public ActionResult<ICollection<CommentDto>> GetAll()
         {
@@ -38,6 +39,7 @@ namespace TechBlogApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+        [AllowAnonymous]
         [HttpGet("byid")]
         public ActionResult<CommentDto> Get(int id)
         {
@@ -59,7 +61,6 @@ namespace TechBlogApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        [Authorize]
         [HttpPost]
         public ActionResult Add([FromBody] AddCommentDto addCommentDto)
         {
@@ -85,7 +86,6 @@ namespace TechBlogApi.Controllers
             }
         }
 
-        [Authorize]
         [HttpPut]
         public IActionResult Update([FromBody] UpdateCommentDto updateCommentDto)
         {
@@ -103,7 +103,7 @@ namespace TechBlogApi.Controllers
                     return StatusCode(StatusCodes.Status403Forbidden);
                 }
                 _commentService.Update(updateCommentDto);
-                return NoContent();
+                return Ok(updateCommentDto);
             }
             catch (DataException ex)
             {
@@ -115,7 +115,7 @@ namespace TechBlogApi.Controllers
             }
         }
         [HttpDelete]
-        public ActionResult Delete(int id, DeleteCommentDto deleteCommentDto)
+        public ActionResult Delete(DeleteCommentDto deleteCommentDto)
         {
             try
             {
@@ -131,7 +131,7 @@ namespace TechBlogApi.Controllers
                 {
                     return StatusCode(StatusCodes.Status403Forbidden);
                 }
-                _commentService.Delete(id);
+                _commentService.Delete(deleteCommentDto.Id);
                 return Ok("The comment is deleted");
             }
             catch (Exception ex)

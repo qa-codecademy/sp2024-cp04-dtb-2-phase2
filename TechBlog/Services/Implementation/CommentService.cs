@@ -44,9 +44,11 @@ namespace Services.Implementation
             _commentRepository.DeleteById(id);
         }
 
-        public ICollection<CommentDto> GetAll()
+        public ICollection<CommentResponseDto> GetAll()
         {
-            return _commentRepository.GetAll().Select(x => x.ToCommentDto()).ToList();
+            var comments = _commentRepository.GetAll();
+            return _mapper.Map<ICollection<CommentResponseDto>>(comments).ToList();
+
         }
         public CommentDto GetById(int id)
         {

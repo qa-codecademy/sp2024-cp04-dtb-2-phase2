@@ -4,7 +4,7 @@ namespace Services.Interfaces
 {
     public interface ICommentService
     {
-        ICollection<CommentDto> GetAll();
+        ICollection<CommentResponseDto> GetAll();
         CommentDto GetById(int id);
         CommentResponseDto Add(AddCommentDto addCommentDto, int userId);
         void Delete(int id);
