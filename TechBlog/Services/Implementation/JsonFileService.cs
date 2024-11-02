@@ -338,9 +338,8 @@ public class CustomPostConverter : JsonConverter<Post>
             if (reader.TokenType == JsonTokenType.EndObject)
                 break;
 
-            // Read the property name
             var propertyName = reader.GetString();
-            reader.Read(); // Move to the property value
+            reader.Read();
 
             switch (propertyName)
             {

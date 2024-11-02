@@ -1,4 +1,5 @@
-﻿using Data_Access.Interfaces;
+﻿using AutoMapper;
+using Data_Access.Interfaces;
 using Domain_Models;
 using DTOs.CommentDto;
 using Mappers;
@@ -10,13 +11,15 @@ namespace Services.Implementation
     public class CommentService : ICommentService
     {
         private readonly ICommentRepository _commentRepository;
+        private readonly IMapper _mapper;
 
-        public CommentService(ICommentRepository commentRepository)
+        public CommentService(ICommentRepository commentRepository, IMapper mapper)
         {
             _commentRepository = commentRepository;
+            _mapper = mapper;
         }
 
-        public void Add(AddCommentDto addCommentDto, int userId)
+        public CommentResponseDto Add(AddCommentDto addCommentDto, int userId)
         {
             if (addCommentDto == null)
             {
@@ -26,6 +29,8 @@ namespace Services.Implementation
             var comment = CommentMapper.ToComment(addCommentDto, userId);
 
             _commentRepository.Add(comment);
+
+            return _mapper.Map<CommentResponseDto>(comment);
 
         }
 

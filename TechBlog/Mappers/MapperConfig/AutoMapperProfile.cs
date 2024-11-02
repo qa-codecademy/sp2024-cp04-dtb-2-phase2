@@ -22,6 +22,8 @@ namespace Mappers.MapperConfig
             CreateMap<Comment, CommentDto>()
                 .ForMember(x => x.UserId, y => y.MapFrom(z => z.UserId));
 
+            CreateMap<Comment, CommentResponseDto>();
+
             CreateMap<PaginatedList, PaginatedListDto>();
 
             CreateMap<Post, PostDto>()

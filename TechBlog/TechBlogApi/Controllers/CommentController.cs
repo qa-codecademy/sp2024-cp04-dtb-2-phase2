@@ -69,9 +69,9 @@ namespace TechBlogApi.Controllers
                 var found = _userService.GetUserById(userId);
                 if (found != null)
                 {
-                    _commentService.Add(addCommentDto, userId);
+                    var result = _commentService.Add(addCommentDto, userId);
 
-                    return CreatedAtAction("Add", addCommentDto);
+                    return CreatedAtAction("Add", result);
                 }
                 return Unauthorized("Invalid user!");
             }
