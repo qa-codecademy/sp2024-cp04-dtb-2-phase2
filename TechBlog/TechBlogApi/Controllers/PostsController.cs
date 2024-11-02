@@ -80,7 +80,7 @@ namespace TechBlogApi.Controllers
             return Unauthorized("Invalid user!");
         }
         [Authorize]
-        [HttpDelete("delete")]
+        [HttpDelete("delete/{id}")]
         public IActionResult Delete(int id) 
         {
             if (id < 1)
@@ -93,12 +93,12 @@ namespace TechBlogApi.Controllers
         }
         [Authorize]
         [HttpPut("update")]
-        public IActionResult Update(PostCreateDto dto, int id)
+        public IActionResult Update(PostCreateDto dto)
         {
-            if (!_postService.Any(id))
+            if (!_postService.Any(dto.Id))
                 return BadRequest("No Post was found with the specified id!");
 
-            if (_postService.Update(dto, id))
+            if (_postService.Update(dto, dto.Id))
                 return Ok("Successfuly updated the post!");
 
             return StatusCode(StatusCodes.Status500InternalServerError, "The post wasn't updated successfully!");

@@ -13,7 +13,7 @@ namespace TechBlogApi.Controllers
         {
             _emailService = emailService; 
         }
-        [HttpGet]
+        [HttpGet("{email}")]
         public IActionResult Get(string email) 
         {
             try
@@ -27,7 +27,7 @@ namespace TechBlogApi.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("{email}")]
         public IActionResult Upload(string email)
         {
             try
@@ -59,7 +59,7 @@ namespace TechBlogApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         } 
-        [HttpDelete]
+        [HttpDelete("{email}")]
         public IActionResult Delete(string email)
         {
             try 

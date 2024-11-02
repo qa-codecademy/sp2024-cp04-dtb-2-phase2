@@ -83,7 +83,6 @@ namespace TechBlogApi.Controllers
             return Ok(_imageService.GetUserImages(loggedInUserId));
             
         }
-        [Authorize]
         [HttpGet("defaultimages")]
         public IActionResult GetDefaultImages()
         {
