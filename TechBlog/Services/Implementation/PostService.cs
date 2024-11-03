@@ -101,7 +101,7 @@ namespace Services.Implementation
                 switch (filters.SortBy)
                 {
                     case "old":
-                        query = query.OrderBy(b => b.PostingTime);
+                        query = query.OrderByDescending(b => b.PostingTime);
                         break;
                     case "new":
                         query = query.OrderByDescending(b => b.PostingTime);
