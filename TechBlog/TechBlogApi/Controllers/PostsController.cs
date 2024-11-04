@@ -1,4 +1,5 @@
 ﻿using Domain_Models;
+using DTOs.CommentDto;
 using DTOs.FilterDto;
 using DTOs.Post;
 using Helpers;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
+using System.Security.Claims;
 
 namespace TechBlogApi.Controllers
 {
@@ -85,11 +87,25 @@ namespace TechBlogApi.Controllers
         {
             if (id < 1)
                 return BadRequest("Please ensure the value is greater than 0!");
+             var foundPost = _postService.GetById(id);
 
-            if (_postService.DeleteById(id))
-                return Ok("The post was deleted successfuly!");
+             var identity = HttpContext.User.Identity as ClaimsIdentity;
+             var identityUserId = identity.FindFirst("UserId")?.Value;
 
-            return StatusCode(StatusCodes.Status500InternalServerError, "Post wasn't deleted successfully!");
+             if (identityUserId == null || !int.TryParse(identityUserId, out int loggedInUserId))
+             {
+                 return StatusCode(StatusCodes.Status401Unauthorized, "User ID is missing or invalid.");
+             }
+
+             if (loggedInUserId != foundPost.User.Id && identity.FindFirst("isAdmin").Value != "Admin")
+             {
+                 return StatusCode(StatusCodes.Status403Forbidden);
+             }
+
+             if (_postService.DeleteById(id))
+                 return Ok("The post was deleted successfuly!");
+
+             return StatusCode(StatusCodes.Status500InternalServerError, "Post wasn't deleted successfully!");
         }
         [Authorize]
         [HttpPut("update")]
