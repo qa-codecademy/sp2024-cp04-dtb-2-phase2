@@ -1,6 +1,7 @@
 ﻿using DTOs.NewsLetter;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace TechBlogApi.Controllers
 {
@@ -28,7 +29,7 @@ namespace TechBlogApi.Controllers
         }
 
         [HttpPost("{email}")]
-        public IActionResult Upload(string email)
+        public IActionResult Upload([EmailAddress]string email)
         {
             try
             {
