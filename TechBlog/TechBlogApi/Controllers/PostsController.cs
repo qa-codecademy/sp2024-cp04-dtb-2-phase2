@@ -93,7 +93,7 @@ namespace TechBlogApi.Controllers
         }
         [Authorize]
         [HttpPut("update")]
-        public IActionResult Update(PostCreateDto dto)
+        public IActionResult Update(PostUpdateDto dto)
         {
             if (!_postService.Any(dto.Id))
                 return BadRequest("No Post was found with the specified id!");

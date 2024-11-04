@@ -10,7 +10,7 @@ namespace Services.Interfaces
         PostDetailsDto? GetById(int id);
         bool Add(PostCreateDto entity);
         bool Any(int id);
-        bool Update(PostCreateDto entity, int id);
+        bool Update(PostUpdateDto entity, int id);
         public Task<PaginatedListDto> GetPaginatedPosts(int pageIndex, PostFilter filters);
         //bool Delete(PostDto entity);
         bool DeleteById(int id);
