@@ -64,7 +64,7 @@ namespace Services.Implementation
             if (userDb != null)
             {
                 //this means that we have a user with registerUserDto.Username in the db
-                throw new DataException($"Username {registerUserDto.Email} is already in use");
+                throw new DataException($"Email {registerUserDto.Email} is already in use");
             }
 
             string hash = GenerateHash(registerUserDto.Password);
@@ -86,7 +86,7 @@ namespace Services.Implementation
 
             if (string.IsNullOrEmpty(loginUserDto.Email) || string.IsNullOrEmpty(loginUserDto.Password))
             {
-                throw new DataException("Username and password are required");
+                throw new DataException("Email and password are required");
             }
 
             string hash = GenerateHash(loginUserDto.Password);
