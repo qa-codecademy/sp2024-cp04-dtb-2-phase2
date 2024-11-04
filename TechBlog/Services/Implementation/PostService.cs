@@ -150,7 +150,7 @@ namespace Services.Implementation
             }
         }
 
-        public bool Update(PostCreateDto entity, int id)
+        public bool Update(PostUpdateDto entity, int id)
         {
             var found = _repository.GetById(id);
             if (found != null)
