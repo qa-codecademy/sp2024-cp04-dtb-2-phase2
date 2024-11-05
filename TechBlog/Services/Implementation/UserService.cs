@@ -1,4 +1,5 @@
-﻿using Data_Access.Interfaces;
+﻿using AutoMapper;
+using Data_Access.Interfaces;
 using Domain_Models;
 using DTOs.User;
 using Mappers;
@@ -20,13 +21,14 @@ namespace Services.Implementation
     {
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _config;
+        private IMapper _mapper;
 
-        public UserService(IUserRepository userReposiotry, IConfiguration config)
+        public UserService(IUserRepository userReposiotry, IConfiguration config, IMapper mapper)
         {
             this._userRepository = userReposiotry;
             _config = config;
-
-    }
+            _mapper = mapper;
+        }
 
     public void RegisterUser(RegisterUserDto registerUserDto)
         {
@@ -146,6 +148,30 @@ namespace Services.Implementation
             }
             UserDto userDto = user.ToUserDto();
             return userDto;
+        }
+        public DetailedUserDto? GetDetailedUserById(int id) 
+        {
+            var found = _userRepository.GetById(id);
+            if(found != null) 
+            {
+                var parsedFound = _mapper.Map<DetailedUserDto>(found);
+                return parsedFound;
+            }
+            return null;
+        }
+
+        public UpdateUserDto? UpdateUser(UpdateUserDto dto, int id)
+        {
+            var found = _userRepository.GetById(id);
+            if (found != null) 
+            {
+                if(!dto.FirstName.IsNullOrEmpty()) found.FirstName = dto.FirstName;
+                if(!dto.LastName.IsNullOrEmpty()) found.LastName = dto.LastName;
+                if(!dto.Email.IsNullOrEmpty()) found.Email = dto.Email;
+                _userRepository.Update(found);
+                return dto;
+            }
+            return null;
         }
 
         public ICollection<UserDto> GetAllUsers()

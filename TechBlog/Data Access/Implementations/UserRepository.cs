@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data_Access.Implementations
 {
-    public class UserRepository : Repository<User> , IUserRepository 
+    public class UserRepository : Repository<User>, IUserRepository
     {
         private TechBlogDbContext _dbContext;
         public UserRepository(TechBlogDbContext dbContext) : base(dbContext)
@@ -21,6 +21,5 @@ namespace Data_Access.Implementations
         {
             return _dbContext.Users.FirstOrDefault(x=> x.Email.ToLower() == email.ToLower() && x.Password == password);
         }
-
     }
 }

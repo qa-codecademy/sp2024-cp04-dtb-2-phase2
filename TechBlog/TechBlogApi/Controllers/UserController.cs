@@ -73,6 +73,36 @@ namespace TechBlogApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [HttpGet("userdetails")]
+        public IActionResult GetUserDetails()
+        {
+            try
+            {
+                var found = _userService.GetDetailedUserById(_tokenService.GetUserId());
+                if(found != null)
+                    return Ok(found);
+
+                return NotFound("User wasn't found!");
+            }catch(Exception ex)
+            {
+                return BadRequest($"There was an error while attempting to fetch the user!\n\n{ex.Message}");
+            }
+        }
+        [HttpPut]
+        public IActionResult UpdateUserDetails([FromBody] UpdateUserDto dto)
+        {
+            try
+            {
+                var id = _tokenService.GetUserId();
+                var result = _userService.UpdateUser(dto, id);
+                if (result != null) return Ok(result);
+                return BadRequest("The user wasn't updated successfully!");
+
+            } catch(Exception ex) 
+            {
+                return BadRequest($"There was an error while attempting to update the user!\n\n{ex.Message}");
+            }
+        }
 
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)

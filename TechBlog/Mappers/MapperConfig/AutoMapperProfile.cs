@@ -18,6 +18,7 @@ namespace Mappers.MapperConfig
                 //.ForMember(x => x.Authors, y => y.MapFrom(z => z.Authors));
 
             CreateMap<User, UserDto>();
+            CreateMap<User, DetailedUserDto>();
 
             CreateMap<Comment, CommentDto>()
                 .ForMember(x => x.UserId, y => y.MapFrom(z => z.UserId));
