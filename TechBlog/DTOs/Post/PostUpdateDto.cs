@@ -7,13 +7,12 @@ namespace DTOs.Post
         [Required]
         public int Id { get; set; }
         [Required]
-        public string Title { get; set; }
+        public string? Title { get; set; }
         [Required]
-        public string Text { get; set; }
+        public string? Text { get; set; }
         [Required]
-        public string Description { get; set; }
-        public int? UserId { get; set; }
-        [Required]
-        public List<string> Tags { get; set; }
+        public string? Description { get; set; }
+        //public int? UserId { get; set; }
+        //public List<string> Tags { get; set; }
     }
 }

@@ -150,17 +150,17 @@ namespace Services.Implementation
             }
         }
 
-        public bool Update(PostUpdateDto entity, int id)
+        public bool Update(PostUpdateDto entity)
         {
-            var found = _repository.GetById(id);
+            var found = _repository.GetById(entity.Id);
             if (found != null)
             {
                 found.Title = entity.Title;
                 found.Text = entity.Text;
                 found.Description = entity.Description;
-                //found.UserId = entity.UserId; -   No, we can't change the author of the post dummy!
-                //found.Image = entity.Image; -     And I'm not sure if we want to be able to change the image(too much work[maybe?])
-                found.Tags = entity.Tags.GetPostTags();
+                //found.UserId = entity.UserId; -   No, we can't change the author of the post!
+                //found.Image = entity.Image; -     And I'm not sure if we want to be able to change the image(too much work imo)
+                //found.Tags = entity.Tags.GetPostTags();
 
                 return _repository.Update(found);
             }

@@ -37,7 +37,7 @@ namespace Data_Access.Implementations
 
         public ICollection<T> GetAll() => _table.AsNoTracking().ToList();
 
-        public T? GetById(int id) => _table.AsNoTracking().FirstOrDefault(x => x.Id.Equals(id));
+        public T? GetById(int id) => _table.FirstOrDefault(x => x.Id.Equals(id));
         public bool Update(T entity)
         {
             _table.Update(entity);

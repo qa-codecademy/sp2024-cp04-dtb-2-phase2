@@ -111,13 +111,30 @@ namespace TechBlogApi.Controllers
         [HttpPut("update")]
         public IActionResult Update(PostUpdateDto dto)
         {
-            if (!_postService.Any(dto.Id))
-                return BadRequest("No Post was found with the specified id!");
+            try
+            {
+                var userId = _tokenHelper.GetUserId();
+                var found = _userService.GetUserById(userId);
 
-            if (_postService.Update(dto, dto.Id))
-                return Ok("Successfuly updated the post!");
+                var postToBeEdited = _postService.GetById(dto.Id);
 
-            return StatusCode(StatusCodes.Status500InternalServerError, "The post wasn't updated successfully!");
+                if (postToBeEdited == null) return BadRequest("The requested post to be updated wasn't found!");
+
+                if (found != null && found.Id == postToBeEdited.User.Id)
+                {
+                    if (_postService.Update(dto))
+                        return Ok("Successfuly updated the post!");
+                } else {
+                    return NotFound("User wasn't valid for this request!");
+                }
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "The post wasn't updated successfully!");
+
+            } catch(Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Something went wrong when attempting to update the post!\n\n{ex.Message}");
+            }
+
         }
 
     }
