@@ -8,8 +8,8 @@ namespace Services.Interfaces
     {
         public void SendEmailToSubscribers(PostCreateDto createdPost);
         public NewsLetterDto GetSubscriberByEmail(string email);
-        public void Subscribe(string email);
-        public void Unsubscribe(string email);
+        public bool Subscribe(string email);
+        public bool Unsubscribe(string email);
         public void UpdateSubscriber(NewsLetterUpdateDto subscriber);
 
     }

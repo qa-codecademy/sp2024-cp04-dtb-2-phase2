@@ -33,12 +33,10 @@ namespace TechBlogApi.Controllers
         {
             try
             {
-                if (email == null)
-                {
-                    return BadRequest("No Email given");
-                }
-                _emailService.Subscribe(email);
-                return Ok("Succesfully subscribed");
+                if(_emailService.Subscribe(email))
+                    return CreatedAtAction("Upload", "Successfully subscribed!");
+
+                return BadRequest($"Attempt to subscribe with email: [ {email} ] wasn't successful!");
 
             }
             catch (Exception ex)
@@ -52,7 +50,7 @@ namespace TechBlogApi.Controllers
             try
             {
                 _emailService.UpdateSubscriber(newsLetterUpdateDto);
-                return Ok();
+                return Ok(newsLetterUpdateDto);
             }
             catch (Exception ex)
             {
@@ -69,8 +67,10 @@ namespace TechBlogApi.Controllers
                 {
                     return BadRequest("No Email given");
                 }
-                _emailService.Unsubscribe(email);
-                return Ok();
+                if(_emailService.Unsubscribe(email))
+                    return Ok(email);
+
+                return BadRequest($"Attempt to unsubscribe with email: [ {email} ] wasn't successful!");
             } 
             catch (Exception ex) 
             {

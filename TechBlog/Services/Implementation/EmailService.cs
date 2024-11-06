@@ -25,21 +25,23 @@ namespace Services.Implementation
             _mapper = mapper;
         }
 
-        public void Subscribe(string email)
+        public bool Subscribe(string email)
         {
             var subscriber = _newsletterRepository.GetByEmail(email);
             if (subscriber == null)
             {
-                _newsletterRepository.Add(new NewsLetter() { Email = email });
+               return _newsletterRepository.Add(new NewsLetter() { Email = email });
             }
+            return false;
         }
-        public void Unsubscribe(string email)
+        public bool Unsubscribe(string email)
         {
             var subscriber = _newsletterRepository.GetByEmail(email);
             if (subscriber != null)
             {
-                _newsletterRepository.Delete(subscriber.Email);
+               return _newsletterRepository.Delete(subscriber.Email);
             }
+            return false;
         }
 
         public void UpdateSubscriber(NewsLetterUpdateDto subscriber)
