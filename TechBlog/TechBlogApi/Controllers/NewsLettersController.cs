@@ -15,7 +15,7 @@ namespace TechBlogApi.Controllers
             _emailService = emailService; 
         }
         [HttpGet("{email}")]
-        public IActionResult Get(string email) 
+        public IActionResult Get([EmailAddress]string email) 
         {
             try
             {
@@ -59,7 +59,7 @@ namespace TechBlogApi.Controllers
             }
         } 
         [HttpDelete("{email}")]
-        public IActionResult Delete(string email)
+        public IActionResult Delete([EmailAddress]string email)
         {
             try 
             {
