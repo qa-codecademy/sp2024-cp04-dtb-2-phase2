@@ -23,6 +23,7 @@
     <ProjectReference Include="..\Helpers\Helpers.csproj" />
     <ProjectReference Include="..\Mappers\Mappers.csproj" />
     <ProjectReference Include="..\Services\Services.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>

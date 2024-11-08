@@ -30,10 +30,11 @@ namespace TechBlogApi.Controllers
         {
             try
             {
+                //_userService
                 _userService.RegisterUser(registerUserDto);
                 return Ok();
             }
-            catch (DataException ex)
+            catch (Shared.CustomExceptions.DataException ex)
             {
                 return BadRequest(ex.Message);
             }
