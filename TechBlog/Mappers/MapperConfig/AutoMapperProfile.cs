@@ -31,7 +31,8 @@ namespace Mappers.MapperConfig
             .ForMember(x => x.Rating, y => y.MapFrom(z => z.Stars.GetPostRating()))
             .ForMember(x => x.Tags, y => y.MapFrom(z => z.Tags.GetPostTagsBE()))
             .ForMember(x => x.Image, y => y.MapFrom(z => z.ImageBase64 ?? z.Image.Data))
-            .ForMember(x => x.Comments, y => y.MapFrom(z => z.Comments.Count));
+            .ForMember(x => x.Comments, y => y.MapFrom(z => z.Comments.Count))
+            .ForMember(x => x.User, y => y.MapFrom(z => z.User));
 
 
             CreateMap<Post, PostDetailsDto>()

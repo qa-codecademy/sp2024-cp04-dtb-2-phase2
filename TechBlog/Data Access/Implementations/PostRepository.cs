@@ -1,6 +1,7 @@
 ﻿using Data_Access.Interfaces;
 using Domain_Models;
 using DTOs.FilterDto;
+using DTOs.Post;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data_Access.Implementations
@@ -63,5 +64,10 @@ namespace Data_Access.Implementations
         {
             return _table.Where(x => x.UserId == id).ToList();
         }
+        public List<Post> GetAllPostsIncludingUsers()
+        {
+            return _table.Include(x => x.User).ToList();
+        }
+
     }
 }

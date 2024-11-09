@@ -38,6 +38,8 @@ namespace Mappers
             {
                 dto.Fullname = model.FullName;
                 dto.Id = model.Id;
+                dto.IsAdmin = model.IsAdmin;
+                dto.Email = model.Email;
             }
             return dto;
         }

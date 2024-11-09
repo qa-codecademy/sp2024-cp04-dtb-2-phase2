@@ -89,7 +89,7 @@ namespace Services.Implementation
 
 
         //  I wonder if this 1 liner will cause any issues 
-        public ICollection<PostDto> GetAll() => _mapper.Map<ICollection<PostDto>>(_repository.GetAll().ToList());
+        public ICollection<PostDto> GetAll() => _mapper.Map<ICollection<PostDto>>(_repository.GetAllPostsIncludingUsers().ToList());
         //  It wasn't the method's fault :]
 
         public async Task<PaginatedListDto> GetPaginatedPosts(int pageIndex, PostFilter filters)

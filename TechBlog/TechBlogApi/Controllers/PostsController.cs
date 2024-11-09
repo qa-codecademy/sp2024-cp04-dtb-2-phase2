@@ -65,6 +65,11 @@ namespace TechBlogApi.Controllers
             return NotFound("No post found!");
 
         }
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            return Ok(_postService.GetAll());
+        }
         [Authorize]
         [HttpPost("create")]
         public IActionResult Create([FromBody] PostCreateDto dto) 

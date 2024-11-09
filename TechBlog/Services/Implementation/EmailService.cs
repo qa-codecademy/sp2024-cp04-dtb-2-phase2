@@ -30,6 +30,12 @@ namespace Services.Implementation
             var subscriber = _newsletterRepository.GetByEmail(email);
             if (subscriber == null)
             {
+                var user = _userRepository.GetUserByEmail(email);
+                if (user != null)
+                {
+                    user.IsSubscribed = true;
+                    _userRepository.Update(user);
+                }
                return _newsletterRepository.Add(new NewsLetter() { Email = email });
             }
             return false;
@@ -37,9 +43,17 @@ namespace Services.Implementation
         public bool Unsubscribe(string email)
         {
             var subscriber = _newsletterRepository.GetByEmail(email);
+            
             if (subscriber != null)
             {
-               return _newsletterRepository.Delete(subscriber.Email);
+                var user = _userRepository.GetUserByEmail(email);
+                if (user != null)
+                {
+                    user.IsSubscribed = false;
+                    _userRepository.Update(user);
+                }
+
+                return _newsletterRepository.Delete(subscriber.Email);
             }
             return false;
         }

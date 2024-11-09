@@ -17,5 +17,6 @@ namespace DTOs.Post
         public DateTime PostingTime { get; set; }
         public string Image { get; set; } //?
         public List<string> Tags { get; set; } // ?
+        public User.UserDto User { get; set; }
     }
 }

@@ -36,6 +36,9 @@ namespace Services.Implementation
             {
                 throw new DataException("User cannot be null");
             }
+            registerUserDto.FirstName = registerUserDto.FirstName?.Replace("\0", "");
+            registerUserDto.LastName = registerUserDto.LastName?.Replace("\0", "");
+            registerUserDto.Email = registerUserDto.Email?.Replace("\0", "");
 
             if (string.IsNullOrEmpty(registerUserDto.FirstName))
             {
