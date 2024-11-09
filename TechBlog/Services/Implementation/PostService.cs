@@ -107,7 +107,8 @@ namespace Services.Implementation
                         query = query.OrderByDescending(b => b.PostingTime);
                         break;
                     case "popular":
-                        query = query.OrderByDescending(b => b.Stars.Count);
+                        query = query
+                            .OrderByDescending(b => b.Stars.Any() ? b.Stars.Average(s => s.Rating) : 0);
                         break;
                 }
             }
