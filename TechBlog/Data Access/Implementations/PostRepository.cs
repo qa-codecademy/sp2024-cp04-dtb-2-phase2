@@ -62,11 +62,36 @@ namespace Data_Access.Implementations
 
         public List<Post> GetUserPosts(int id)
         {
-            return _table.Where(x => x.UserId == id).ToList();
+            return _table.Include(x => x.Image).Include(x => x.User).Where(x => x.UserId == id).ToList();
         }
         public List<Post> GetAllPostsIncludingUsers()
         {
             return _table.Include(x => x.User).ToList();
+        }
+
+        public List<Post> SearchPosts(string query)
+        {
+            if (string.IsNullOrEmpty(query))
+                return new List<Post>();
+
+            query = query.ToLower();
+
+            // Retrieve the posts with necessary related entities
+            var posts = _table
+                .Include(p => p.User)
+                .Include(p => p.Stars)
+                .Include(p => p.Image)
+                .Include(p => p.Comments)
+                .ToList()  // This forces the query to load data into memory
+                .Where(p =>
+                    (!string.IsNullOrEmpty(p.Title) && p.Title.ToLower().Contains(query)) ||
+                    (!string.IsNullOrEmpty(p.Description) && p.Description.ToLower().Contains(query)) ||
+                    (!string.IsNullOrEmpty(p.Tags) && p.Tags.ToLower().Contains(query)) ||
+                    (p.User != null && !string.IsNullOrEmpty(p.User.FullName) && p.User.FullName.ToLower().Contains(query))
+                )
+                .ToList();  // Perform filtering in memory
+
+            return posts;
         }
 
     }

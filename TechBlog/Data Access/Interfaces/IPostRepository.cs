@@ -10,6 +10,7 @@ namespace Data_Access.Interfaces
         public Post GetDetailedPost(int id);
         public List<Post> GetUserPosts(int id);
         public List<Post> GetAllPostsIncludingUsers();
+        public List<Post> SearchPosts(string query);
 
     }
 }

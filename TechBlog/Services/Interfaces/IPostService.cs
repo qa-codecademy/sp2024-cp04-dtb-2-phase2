@@ -15,5 +15,6 @@ namespace Services.Interfaces
         //bool Delete(PostDto entity);
         bool DeleteById(int id);
         public List<PostDto> GetUserPosts(int userId);
+        public List<PostDto> SearchPosts(string query);
     }
 }

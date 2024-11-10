@@ -6,6 +6,7 @@ using Domain_Models;
 using DTOs.FilterDto;
 using DTOs.Image;
 using DTOs.Post;
+using DTOs.User;
 using Mappers.MapperConfig;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -171,6 +172,12 @@ namespace Services.Implementation
         public List<PostDto> GetUserPosts(int userId)
         {
             var posts = _repository.GetUserPosts(userId);
+            return _mapper.Map<List<PostDto>>(posts);
+        }
+
+        public List<PostDto> SearchPosts(string query)
+        {
+            var posts = _repository.SearchPosts(query);
             return _mapper.Map<List<PostDto>>(posts);
         }
     }

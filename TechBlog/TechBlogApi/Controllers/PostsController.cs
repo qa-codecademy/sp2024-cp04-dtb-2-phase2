@@ -142,5 +142,17 @@ namespace TechBlogApi.Controllers
 
         }
 
+        [HttpGet("search")]
+        public IActionResult SearchPosts([FromQuery] string query)
+        {
+            if (string.IsNullOrEmpty(query))
+            {
+                return BadRequest("Search query cannot be empty.");
+            }
+
+            var posts = _postService.SearchPosts(query);
+            return Ok(posts);
+        }
+
     }
 }
