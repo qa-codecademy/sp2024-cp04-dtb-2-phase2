@@ -102,7 +102,7 @@ namespace TechBlogApi.Controllers
                  return StatusCode(StatusCodes.Status401Unauthorized, "User ID is missing or invalid.");
              }
 
-             if (loggedInUserId != foundPost.User.Id && identity.FindFirst("isAdmin").Value != "Admin")
+             if (loggedInUserId != foundPost.User.Id && identity.FindFirst("isAdmin").Value == "False")
              {
                  return StatusCode(StatusCodes.Status403Forbidden);
              }

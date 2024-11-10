@@ -9,6 +9,7 @@ namespace Services.Interfaces
 {
     public interface IUserService
     {
+        public RegisterUserDto RegisterAdmin(RegisterUserDto dto);
         void RegisterUser(RegisterUserDto registerUserDto);
         LoginResponseDto Login(LoginUserDto loginUserDto);
         public UserDto GetUserById(int id);

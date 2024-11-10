@@ -30,6 +30,23 @@ namespace Services.Implementation
             _mapper = mapper;
         }
 
+        public RegisterUserDto RegisterAdmin(RegisterUserDto dto)
+        {
+            User userDb = _userRepository.GetUserByEmail(dto.Email);
+            if (userDb != null)
+            {
+                throw new DataException($"Email {dto.Email} is already in use");
+            }
+
+            string hash = GenerateHash(dto.Password);
+
+            var newUser = dto.ToUser(hash);
+
+            newUser.IsAdmin = true;
+
+            _userRepository.Add(newUser);
+            return dto;
+        }
     public void RegisterUser(RegisterUserDto registerUserDto)
         {
             if (registerUserDto == null)

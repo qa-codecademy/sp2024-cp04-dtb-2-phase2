@@ -62,6 +62,29 @@ namespace TechBlogApi.Controllers
         }
 
         [AllowAnonymous]
+        [HttpPost("admin")]
+        public IActionResult RegisterAdmin(RegisterUserDto dto)
+        {
+            try
+            {
+                if (dto.Password != dto.ConfirmPassword)
+                {
+                    return BadRequest("Passwords must match");
+                }
+                var result = _userService.RegisterAdmin(dto);
+                if(result != null)
+                {
+                    return CreatedAtAction("RegisterAdmin", result);
+                }
+                return BadRequest("Admin wasn't successfully registered!");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest($"Something went wrong {ex.Message}");
+            }
+        }
+
+        [AllowAnonymous]
         [HttpGet]
         public ActionResult<ICollection<UserDto>> GetAll()
         {
@@ -104,7 +127,7 @@ namespace TechBlogApi.Controllers
                 return BadRequest($"There was an error while attempting to update the user!\n\n{ex.Message}");
             }
         }
-
+        [Authorize()]
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
