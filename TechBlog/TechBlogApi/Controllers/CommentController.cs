@@ -16,13 +16,13 @@ namespace TechBlogApi.Controllers
     {
         private readonly ICommentService _commentService;
         private readonly IUserService _userService;
-        private ITokenHelper _tokenHelper { get; set; }
+        private ITokenHelper tokenHelper { get; set; }
 
         public CommentController(ICommentService commentService, ITokenHelper tokenHelper, IUserService userService)
         {
             _commentService = commentService;
             _userService = userService;
-            _tokenHelper = tokenHelper;
+            tokenHelper = tokenHelper;
         }
         [AllowAnonymous]
         [HttpGet]
@@ -61,12 +61,13 @@ namespace TechBlogApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [Authorize]
         [HttpPost]
         public ActionResult Add([FromBody] AddCommentDto addCommentDto)
         {
             try
             {
-                var userId = _tokenHelper.GetUserId();
+                var userId = tokenHelper.GetUserId();
                 var found = _userService.GetUserById(userId);
                 if (found != null)
                 {
@@ -85,7 +86,7 @@ namespace TechBlogApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
+        [Authorize]
         [HttpPut]
         public IActionResult Update([FromBody] UpdateCommentDto updateCommentDto)
         {
@@ -114,6 +115,7 @@ namespace TechBlogApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [Authorize]
         [HttpDelete]
         public ActionResult Delete(DeleteCommentDto deleteCommentDto)
         {
