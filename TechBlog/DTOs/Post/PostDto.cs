@@ -14,6 +14,7 @@ namespace DTOs.Post
         public string Title { get; set; } // ?
         public string Description { get; set; } //?
         public decimal Rating { get; set; }
+        public int Ratings { get; set; }
         public DateTime PostingTime { get; set; }
         public int ImageId { get; set; }
         public string Image { get; set; } //?
