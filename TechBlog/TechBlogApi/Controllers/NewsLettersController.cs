@@ -49,8 +49,15 @@ namespace TechBlogApi.Controllers
         {
             try
             {
-                _emailService.UpdateSubscriber(newsLetterUpdateDto);
-                return Ok(newsLetterUpdateDto);
+                if (_emailService.UpdateSubscriber(newsLetterUpdateDto))
+                {
+                    return Ok(newsLetterUpdateDto);
+
+                } else
+                {
+                    return BadRequest();
+                };
+                
             }
             catch (Exception ex)
             {

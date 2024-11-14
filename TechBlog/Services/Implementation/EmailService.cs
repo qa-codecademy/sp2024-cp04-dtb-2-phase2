@@ -58,7 +58,7 @@ namespace Services.Implementation
             return false;
         }
 
-        public void UpdateSubscriber(NewsLetterUpdateDto subscriber)
+        public bool UpdateSubscriber(NewsLetterUpdateDto subscriber)
         {
             var found = _newsletterRepository.GetByEmail(subscriber.Email);
             if (found != null)
@@ -97,8 +97,10 @@ namespace Services.Implementation
                 //    Tags = found.Tags
                 //};
                 _newsletterRepository.Update(found);
+                return true;
 
             }
+            return false;
         }
 
 

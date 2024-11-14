@@ -10,7 +10,7 @@ namespace Services.Interfaces
         public NewsLetterDto GetSubscriberByEmail(string email);
         public bool Subscribe(string email);
         public bool Unsubscribe(string email);
-        public void UpdateSubscriber(NewsLetterUpdateDto subscriber);
+        public bool UpdateSubscriber(NewsLetterUpdateDto subscriber);
 
     }
 }
