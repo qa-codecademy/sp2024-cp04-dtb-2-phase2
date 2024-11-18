@@ -32,6 +32,9 @@ namespace Services.Implementation
 
         public RegisterUserDto RegisterAdmin(RegisterUserDto dto)
         {
+            dto.FirstName = dto.FirstName?.Replace("\0", "");
+            dto.LastName = dto.LastName?.Replace("\0", "");
+            dto.Email = dto.Email?.Replace("\0", "");
             User userDb = _userRepository.GetUserByEmail(dto.Email);
             if (userDb != null)
             {
@@ -45,6 +48,8 @@ namespace Services.Implementation
             newUser.IsAdmin = true;
 
             _userRepository.Add(newUser);
+            dto.Password = "hidden";
+            dto.ConfirmPassword = "hidden";
             return dto;
         }
     public void RegisterUser(RegisterUserDto registerUserDto)
