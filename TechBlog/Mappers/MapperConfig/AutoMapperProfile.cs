@@ -19,6 +19,8 @@ namespace Mappers.MapperConfig
 
             CreateMap<User, UserDto>();
             CreateMap<User, DetailedUserDto>();
+            CreateMap<User, UserWithNewsLettersDto>()
+                .ForMember(x => x.NewsLetter, y => y.MapFrom(z => z.NewsLetters.Count > 0 ? z.NewsLetters.First() : null));
 
             CreateMap<Comment, CommentDto>()
                 .ForMember(x => x.UserId, y => y.MapFrom(z => z.UserId));

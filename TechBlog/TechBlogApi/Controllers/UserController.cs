@@ -154,5 +154,17 @@ namespace TechBlogApi.Controllers
 
             }
         }
+
+        [Authorize]
+        [HttpGet("usernewsletter")]
+        public IActionResult Get() 
+        {
+            var id = _tokenService.GetUserId();
+            var found = _userService.GetUserIncludingNewsLetter(id);
+            if(found != null)
+                return Ok(found);
+            return NotFound("User wasn't found!");
+        }
+
     }
 }

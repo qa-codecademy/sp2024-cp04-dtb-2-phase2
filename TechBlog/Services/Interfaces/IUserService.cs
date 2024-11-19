@@ -15,7 +15,9 @@ namespace Services.Interfaces
         public UserDto GetUserById(int id);
         public ICollection<UserDto> GetAllUsers();
         DetailedUserDto? GetDetailedUserById(int id);
+        UserWithNewsLettersDto? GetUserIncludingNewsLetter(int id);
         UpdateUserDto? UpdateUser(UpdateUserDto dto, int id);
         void DeleteUser(int id);
+
     }
 }

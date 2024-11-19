@@ -21,13 +21,15 @@ namespace Services.Implementation
     {
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _config;
+        private readonly INewsLetterRepository _newsletterRepository;
         private IMapper _mapper;
 
-        public UserService(IUserRepository userReposiotry, IConfiguration config, IMapper mapper)
+        public UserService(IUserRepository userReposiotry, IConfiguration config, IMapper mapper, INewsLetterRepository repo)
         {
-            this._userRepository = userReposiotry;
+            _userRepository = userReposiotry;
             _config = config;
             _mapper = mapper;
+            _newsletterRepository = repo;
         }
 
         public RegisterUserDto RegisterAdmin(RegisterUserDto dto)
@@ -212,6 +214,18 @@ namespace Services.Implementation
                 throw new NotFoundException("User not found");
             }
             _userRepository.DeleteById(id);
+        }
+
+        public UserWithNewsLettersDto? GetUserIncludingNewsLetter(int id)
+        {
+            var found = _userRepository.GetById(id);
+            if (found != null)
+            {
+                var foundNewsletter = _newsletterRepository.GetByEmail(found.Email);
+                if (foundNewsletter != null && foundNewsletter.Authors.Count > 0) found.NewsLetters.Add(foundNewsletter); 
+                return _mapper.Map<UserWithNewsLettersDto>(found);
+            }
+            return null;
         }
     }
 }

@@ -13,6 +13,6 @@
         public List<Image> Images { get; set; } 
         public string FullName => $"{FirstName} {LastName}";
         public bool IsAdmin { get; set; }
-        public List<NewsLetter> NewsLetters { get; set; }
+        public List<NewsLetter> NewsLetters { get; set; } = new List<NewsLetter>();
     }
 }
