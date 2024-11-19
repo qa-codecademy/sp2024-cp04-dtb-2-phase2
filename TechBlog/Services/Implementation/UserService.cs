@@ -209,7 +209,7 @@ namespace Services.Implementation
             User? userDb = _userRepository.GetById(id);
             if (userDb == null)
             {
-                throw new NotFoundException("Comment not found");
+                throw new NotFoundException("User not found");
             }
             _userRepository.DeleteById(id);
         }

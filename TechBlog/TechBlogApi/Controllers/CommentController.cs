@@ -16,13 +16,13 @@ namespace TechBlogApi.Controllers
     {
         private readonly ICommentService _commentService;
         private readonly IUserService _userService;
-        private ITokenHelper tokenHelper { get; set; }
+        private ITokenHelper TokenHelper { get; set; }
 
         public CommentController(ICommentService commentService, ITokenHelper tokenHelper, IUserService userService)
         {
             _commentService = commentService;
             _userService = userService;
-            tokenHelper = tokenHelper;
+            TokenHelper = tokenHelper;
         }
         [AllowAnonymous]
         [HttpGet]
@@ -67,7 +67,7 @@ namespace TechBlogApi.Controllers
         {
             try
             {
-                var userId = tokenHelper.GetUserId();
+                var userId = TokenHelper.GetUserId();
                 var found = _userService.GetUserById(userId);
                 if (found != null)
                 {

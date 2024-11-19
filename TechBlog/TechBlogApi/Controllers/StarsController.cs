@@ -12,15 +12,20 @@ namespace TechBlogApi.Controllers
     public class StarsController : ControllerBase
     {
         private readonly IStarService _starService;
-        public StarsController(IStarService starService)
+        private readonly IPostService _postService;
+        public StarsController(IStarService starService, IPostService postService)
         {
             _starService = starService;
+            _postService = postService;
         }
         [HttpPost("AddRating")]
         public IActionResult AddStar(CreateStarDto dto)
         {
             try
             {
+                var post = _postService.GetById(dto.PostId);
+                if (post != null && post.User.Id.Equals(dto.UserId))
+                    return BadRequest("You're not allowed to rate your own post!");
                 _starService.AddRating(dto);
                 return Ok("Successfully added star!");
             }
