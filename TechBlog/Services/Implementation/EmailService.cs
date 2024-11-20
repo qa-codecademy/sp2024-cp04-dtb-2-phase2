@@ -125,13 +125,13 @@ namespace Services.Implementation
 
             var user = _userRepository.GetById(createdPost.UserId.Value);
 
-            string input = String.Format($"The author {user.FullName} created a post,\n the title of the post is \"{createdPost.Title}\" containing the tags\n{createdPost.Tags}");
+            string input = String.Format($"The author {user.FullName} just created a new post!\n The title of the post is \"{createdPost.Title}\",  containing the tags [ {string.Join(", ", createdPost.Tags)} ]");
 
             //string mailstring = "Blah blah blah blah. Click <a href=\"http://127.0.0.1:5500/src/index.html\">here</a> for more information.";
             var email = new MimeMessage();
             email.From.Add(MailboxAddress.Parse(_config["EmailUsername"]));
             email.To.AddRange(emailList);
-            email.Subject = "New post notification";
+            email.Subject = "[Tech Blog] New post notification!";
             email.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = input };
 
             using var smpt = new MailKit.Net.Smtp.SmtpClient(); // mailkit.net.smpt

@@ -25,24 +25,25 @@ namespace Services.Implementation
             _mapper = mapper;
 
         }
-        public void Upload(UploadImageDto uploadImageDto)
+        public ImageDto Upload(UploadImageDto uploadImageDto)
         {
-            using (var memoryStream = new MemoryStream())
-            {
-                uploadImageDto.ImageFile.CopyTo(memoryStream);
-                var imageBytes = memoryStream.ToArray();
-                string base64String = Convert.ToBase64String(imageBytes);
+            //using (var memoryStream = new MemoryStream())
+            //{
+            //    uploadImageDto.ImageFile.CopyTo(memoryStream);
+            //    var imageBytes = memoryStream.ToArray();
+            //    string base64String = Convert.ToBase64String(imageBytes);
 
                 var newImage = new Image
                 {
                     UserId = uploadImageDto.UserId.Value,
-                    Data = base64String,
+                    Data = uploadImageDto.ImageFile,
                     //ContentType = uploadImageDto.ImageFile.ContentType,
                     //Name = uploadImageDto.ImageFile.Name
 
                 };
                 _imageRepository.Add(newImage);
-            }
+                return _mapper.Map<ImageDto>(newImage);
+            //}
         }
 
         public ImageDto GetById(int? id)
@@ -51,7 +52,7 @@ namespace Services.Implementation
 
             if (image == null)
             {
-                throw new NotFoundException($"The image for the post with id: {id} was not found");
+                return new ImageDto();
             }
 
             ImageDto imageDto = _mapper.Map<ImageDto>(image);
@@ -72,6 +73,22 @@ namespace Services.Implementation
         public List<ImageDto> GetDefaultImages()
         {
             return _mapper.Map<List<ImageDto>>(_imageRepository.GetDefaultImages());
+        }
+
+        public bool Delete(int id)
+        {
+            return _imageRepository.DeleteById(id);
+        }
+
+        public ImageDto GetRandomImage(int userId)
+        {
+            var images = _imageRepository.GetUserImages(userId);
+            var random = new Random();
+            var imageNumber = random.Next(0, images.Count);
+            var pickedImage = images[imageNumber];
+            if(pickedImage != null)
+                return _mapper.Map<ImageDto>(pickedImage);
+            return new ImageDto();
         }
     }
 }

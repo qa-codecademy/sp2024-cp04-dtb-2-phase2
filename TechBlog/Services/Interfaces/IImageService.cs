@@ -9,11 +9,14 @@ namespace Services.Interfaces
 {
     public interface IImageService
     {
-        void Upload(UploadImageDto uploadImageDto);
+        ImageDto Upload(UploadImageDto uploadImageDto);
+        ImageDto GetRandomImage(int userId);
+        bool Delete(int id);
         ImageDto GetById(int? id);
         List<ImageDto> GetAll();
         List<ImageDto> GetUserImages (int id);
         List<ImageDto> GetDefaultImages();
+
         
     }
 }

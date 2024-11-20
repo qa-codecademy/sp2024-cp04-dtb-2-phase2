@@ -24,7 +24,7 @@ namespace TechBlogApi.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult Upload([FromForm] UploadImageDto uploadImageDto)
+        public IActionResult Upload([FromBody] UploadImageDto uploadImageDto)
         {
             try
             {
@@ -39,9 +39,8 @@ namespace TechBlogApi.Controllers
                     return NotFound();
                 }
                 uploadImageDto.UserId = loggedInUserId;
-                _imageService.Upload(uploadImageDto);
-                return Ok();
-
+                var result = _imageService.Upload(uploadImageDto);
+                return CreatedAtAction("Upload", result);
             }
             catch (Exception ex)
             {
@@ -70,23 +69,55 @@ namespace TechBlogApi.Controllers
         {
             return Ok(_imageService.GetAll());
         }
-        [Authorize]
-        [HttpGet("userimages")]
-        public IActionResult GetUserImages()
+        [HttpGet("userimages/{id:int}")]
+        public IActionResult GetUserImages(int id)
         {
-            var loggedInUserId = _tokenHelper.GetUserId();
-            var foundUser = _userService.GetUserById(loggedInUserId);
+            var foundUser = _userService.GetUserById(id);
             if (foundUser == null)
             {
-                return NotFound();
+                return NotFound("User not found");
             }
-            return Ok(_imageService.GetUserImages(loggedInUserId));
+            return Ok(_imageService.GetUserImages(id));
             
         }
         [HttpGet("defaultimages")]
         public IActionResult GetDefaultImages()
         {
             return Ok(_imageService.GetDefaultImages());
+        }
+        [Authorize]
+        [HttpDelete("{id:int}")]
+        public IActionResult Delete(int id) 
+        {
+            var found = _imageService.GetById(id);
+
+            if (found.Data == null)
+                return NotFound("Image was not found!");
+
+            var userId = _tokenHelper.GetUserId();
+
+            if (found.UserId != userId)
+                return Unauthorized("You're not allowed to delete this image!");
+
+            if (_imageService.Delete(id))
+                return Ok();
+
+            return BadRequest("The image was't deleted successfully!");
+        }
+
+        [HttpGet("{id:int}")]
+        public IActionResult GetById(int id)
+        {
+            return Ok(_imageService.GetById(id));
+        }
+
+        [HttpGet("randomimage/{id:int}")]
+        public IActionResult GetRandomImage(int id)
+        {
+            var result = _imageService.GetRandomImage(id);
+            if (result != null)
+                return Ok(result);
+            return BadRequest("Something went wrong with fetching the image");
         }
     }
 }

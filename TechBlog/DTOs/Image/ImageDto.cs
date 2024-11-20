@@ -8,6 +8,7 @@ namespace DTOs.Image
 {
     public class ImageDto
     {
+        public int UserId { get; set; }
         public int Id { get; set; } 
         public string Data { get; set; }
     }
